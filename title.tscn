@@ -1,0 +1,194 @@
+[gd_scene load_steps=5 format=3 uid="uid://xfrmqbqy7q0n"]
+
+[ext_resource type="FontFile" uid="uid://qtcnac1rawvo" path="res://Assets/x12y16pxMaruMonica.ttf" id="1_font"]
+[ext_resource type="Script" path="res://title.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://4ld7q74ale8v" path="res://options.tscn" id="3_options"]
+[ext_resource type="StyleBox" path="res://Assets/StyleBox_ButtonHover.tres" id="4_button_hover"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_MainPanel"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[sub_resource type="Theme" id="Theme_Title"]
+default_font = ExtResource("1_font")
+default_font_size = 200
+
+[sub_resource type="Theme" id="Theme_Menu"]
+default_font = ExtResource("1_font")
+default_font_size = 64
+Button/styles/hover = ExtResource("4_button_hover")
+
+[sub_resource type="Theme" id="Theme_7g1a8"]
+default_font = ExtResource("1_font")
+default_font_size = 64
+Button/styles/hover = ExtResource("4_button_hover")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_PixelGrabber"]
+bg_color = Color(1.1482246, 1.1482246, 1.1482246, 1)
+border_color = Color(0.75, 0.94, 1, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_PixelGrabberHover"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_PixelGrabberPressed"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_PixelTrack"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+anti_aliasing = false
+
+[sub_resource type="Theme" id="Theme_License"]
+default_font = ExtResource("1_font")
+default_font_size = 24
+Button/styles/hover = ExtResource("4_button_hover")
+VScrollBar/constants/grabber_min_size = 48
+VScrollBar/constants/scroll_width = 20
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_PixelGrabber")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_PixelGrabberHover")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_PixelGrabberPressed")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_PixelTrack")
+
+[node name="Title" type="Node" unique_id=416146283]
+script = ExtResource("2_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=539686121]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+mouse_filter = 2
+
+[node name="TitlePanel" type="PanelContainer" parent="." unique_id=2110059149]
+offset_right = 520.0
+offset_bottom = 259.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_MainPanel")
+
+[node name="TitleLabel" type="Label" parent="TitlePanel" unique_id=620296908]
+layout_mode = 2
+theme = SubResource("Theme_Title")
+text = "Look likes
+Romanesco"
+
+[node name="MenuButtons" type="VBoxContainer" parent="." unique_id=518136485]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -464.0
+offset_right = 360.0
+offset_bottom = -164.0
+grow_vertical = 0
+size_flags_horizontal = 0
+
+[node name="StartButton" type="Button" parent="MenuButtons" unique_id=1962788326]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme = SubResource("Theme_Menu")
+text = "はじめる"
+
+[node name="LoadButton" type="Button" parent="MenuButtons" unique_id=1959076958]
+layout_mode = 2
+theme = SubResource("Theme_7g1a8")
+text = "ロード"
+
+[node name="SettingButton" type="Button" parent="MenuButtons" unique_id=534932776]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme = SubResource("Theme_Menu")
+text = "設定"
+
+[node name="QuitButton" type="Button" parent="MenuButtons" unique_id=146400897]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme = SubResource("Theme_Menu")
+text = "おわる"
+
+[node name="LicenseButton" type="Button" parent="MenuButtons" unique_id=1113732427]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme = SubResource("Theme_Menu")
+text = "ライセンス"
+
+[node name="LicensePopup" type="Window" parent="." unique_id=181175182]
+oversampling_override = 1.0
+title = "ライセンス情報"
+position = Vector2i(0, 36)
+size = Vector2i(1100, 720)
+visible = false
+exclusive = true
+min_size = Vector2i(640, 440)
+
+[node name="Panel" type="PanelContainer" parent="LicensePopup" unique_id=46936025]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="LicensePopup/Panel" unique_id=937707805]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Layout" type="VBoxContainer" parent="LicensePopup/Panel/Margin" unique_id=2094159398]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Heading" type="Label" parent="LicensePopup/Panel/Margin/Layout" unique_id=955276927]
+layout_mode = 2
+theme = SubResource("Theme_License")
+theme_override_font_sizes/font_size = 32
+text = "Godot Engine ライセンス（MIT）"
+
+[node name="Description" type="Label" parent="LicensePopup/Panel/Margin/Layout" unique_id=600180283]
+layout_mode = 2
+theme = SubResource("Theme_License")
+text = "このアプリケーションは Godot Engine を使用しています。ライセンス本文は実行中の Godot Engine から取得して表示します。"
+autowrap_mode = 2
+
+[node name="LicenseText" type="RichTextLabel" parent="LicensePopup/Panel/Margin/Layout" unique_id=834837635]
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_License")
+
+[node name="MaruMonicaNotice" type="Label" parent="LicensePopup/Panel/Margin/Layout" unique_id=1403329975]
+layout_mode = 2
+theme = SubResource("Theme_License")
+text = "使用フォント: マルモニカ（x12y16pxMaruMonica）
+著作権者: Copyright (c) 2021, hicc（x0y0pxFreeFont）
+ライセンス: 配布元の利用規約に従います。商用利用・加工・アプリケーションへの埋め込みが許可されています。
+配布元: https://booth.pm/en/items/2958237"
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="LicensePopup/Panel/Margin/Layout" unique_id=310382697]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme = SubResource("Theme_License")
+text = "閉じる"
+
+[node name="OptionsLayer" type="CanvasLayer" parent="." unique_id=1842347652]
+layer = 10
+
+[node name="Options" parent="OptionsLayer" unique_id=750959724 instance=ExtResource("3_options")]
+visible = false

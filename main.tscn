@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://b2rgm22yc0xe6"]
+
+[ext_resource type="PackedScene" uid="uid://c68r06jop6rs7" path="res://dialog.tscn" id="1_dialog"]
+[ext_resource type="PackedScene" uid="uid://4ld7q74ale8v" path="res://options.tscn" id="2_options"]
+[ext_resource type="Script" uid="uid://b38ku4jyx2lb0" path="res://main.gd" id="3_main"]
+[ext_resource type="Script" path="res://renpy_story_processor.gd" id="4_story_processor"]
+
+[node name="Main" type="Node2D" unique_id=469165126]
+script = ExtResource("3_main")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=990809186]
+offset_right = 1935.0
+offset_bottom = 1098.0
+color = Color(0, 0, 0, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1399644334]
+
+[node name="TransitionOverlay" type="ColorRect" parent="CanvasLayer"]
+visible = false
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Dialog" parent="CanvasLayer" unique_id=1785094680 instance=ExtResource("1_dialog")]
+
+[node name="OptionsLayer" type="CanvasLayer" parent="." unique_id=1342110080]
+layer = 10
+
+[node name="Options" parent="OptionsLayer" unique_id=750959724 instance=ExtResource("2_options")]
+visible = false
+
+[node name="StoryProcessor" type="Node" parent="."]
+script = ExtResource("4_story_processor")

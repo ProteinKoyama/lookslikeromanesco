@@ -1,0 +1,168 @@
+[gd_scene format=3 uid="uid://c68r06jop6rs7"]
+
+[ext_resource type="FontFile" uid="uid://qtcnac1rawvo" path="res://Assets/x12y16pxMaruMonica.ttf" id="1_font"]
+[ext_resource type="Script" uid="uid://b80egewq4rxif" path="res://dialog.gd" id="2_script"]
+[ext_resource type="StyleBox" path="res://Assets/StyleBox_ButtonHover.tres" id="3_button_hover"]
+
+[sub_resource type="Theme" id="Theme_7g1a8"]
+default_font = ExtResource("1_font")
+default_font_size = 40
+Button/styles/hover = ExtResource("3_button_hover")
+
+[sub_resource type="Theme" id="Theme_Choices"]
+default_font = ExtResource("1_font")
+default_font_size = 40
+Button/styles/hover = ExtResource("3_button_hover")
+
+[sub_resource type="Theme" id="Theme_Dialogue"]
+default_font = ExtResource("1_font")
+default_font_size = 50
+
+[sub_resource type="FontVariation" id="FontVariation_SpeakerBold"]
+base_font = ExtResource("1_font")
+variation_embolden = 0.8
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_ActiveButton"]
+bg_color = Color(0.42, 0.1176, 0.188, 1)
+
+[sub_resource type="Theme" id="Theme_p22n3"]
+default_font = ExtResource("1_font")
+default_font_size = 40
+Button/styles/hover = ExtResource("3_button_hover")
+
+[node name="Dialog" type="Control" unique_id=1785094680]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_script")
+external_story_mode = true
+
+[node name="ChoiceScrollContainer" type="ScrollContainer" parent="." unique_id=1864057550]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ChoiceCenterContainer" type="CenterContainer" parent="ChoiceScrollContainer" unique_id=1864057551]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ChoiceVBoxContainer" type="VBoxContainer" parent="ChoiceScrollContainer/ChoiceCenterContainer" unique_id=1864057552]
+custom_minimum_size = Vector2(960, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_Choices")
+theme_override_constants/separation = 12
+
+[node name="TextInputVBoxContainer" type="VBoxContainer" parent="ChoiceScrollContainer/ChoiceCenterContainer"]
+visible = false
+custom_minimum_size = Vector2(960, 0)
+layout_mode = 2
+theme = SubResource("Theme_Choices")
+theme_override_constants/separation = 12
+
+[node name="PromptLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+layout_mode = 2
+autowrap_mode = 2
+
+[node name="NameLineEdit" type="LineEdit" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubmitButton" type="Button" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "決定"
+
+[node name="ValidationLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.1176, 0.188, 1)
+autowrap_mode = 2
+
+[node name="DialoguePanel" type="PanelContainer" parent="." unique_id=1544389047]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 72.0
+offset_top = -330.0
+offset_right = -72.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="DialoguePanel" unique_id=2076433378]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 20
+
+[node name="Layout" type="VBoxContainer" parent="DialoguePanel/Margin" unique_id=1065733105]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SpeakerName" type="Label" parent="DialoguePanel/Margin/Layout" unique_id=180300619]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme = SubResource("Theme_Dialogue")
+theme_override_colors/font_color = Color(0.42, 0.1176, 0.188, 1) # AGENTS.md のサブカラー HSV(346, 72, 42)
+theme_override_fonts/font = SubResource("FontVariation_SpeakerBold")
+theme_override_font_sizes/font_size = 56
+text = "案内人"
+
+[node name="DialogueText" type="Label" parent="DialoguePanel/Margin/Layout" unique_id=826498901]
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_Dialogue")
+theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
+text = "会話データを読み込み中です。"
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialoguePanel/Margin/Layout" unique_id=1157743919]
+layout_mode = 2
+alignment = 2
+
+[node name="AutoButton" type="Button" parent="DialoguePanel/Margin/Layout/HBoxContainer" unique_id=618106949]
+layout_mode = 2
+theme = SubResource("Theme_7g1a8")
+theme_override_styles/pressed = SubResource("StyleBox_ActiveButton")
+theme_override_styles/hover_pressed = SubResource("StyleBox_ActiveButton")
+toggle_mode = true
+text = "AUTO"
+
+[node name="SkipButton" type="Button" parent="DialoguePanel/Margin/Layout/HBoxContainer" unique_id=728309873]
+layout_mode = 2
+theme = SubResource("Theme_7g1a8")
+theme_override_styles/pressed = SubResource("StyleBox_ActiveButton")
+theme_override_styles/hover_pressed = SubResource("StyleBox_ActiveButton")
+toggle_mode = true
+text = "SKIP"
+
+[node name="SettingButton" type="Button" parent="DialoguePanel/Margin/Layout/HBoxContainer" unique_id=1965955367]
+layout_mode = 2
+theme = SubResource("Theme_p22n3")
+theme_override_styles/pressed = SubResource("StyleBox_ActiveButton")
+theme_override_styles/hover_pressed = SubResource("StyleBox_ActiveButton")
+toggle_mode = true
+text = "設定"

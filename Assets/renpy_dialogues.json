@@ -1,0 +1,5072 @@
+{
+  "format_version": 3,
+  "source": "script.rpy",
+  "extraction": "flow stores all story events in source order, including menu choices and destinations",
+  "variables": {
+	"character_name": null,
+	"q1_general_flag": 0,
+	"q2_general_flag": 1,
+	"q3_general_flag": 1,
+	"q2_name_flag": 0,
+	"q2_face_flag": 0,
+	"q2_face_change_flag": 0,
+	"q3_place_flag": 0,
+	"q3_place_seaside_flag": 0,
+	"q3_place_front_flag": 0,
+	"q3_place_front_coin_flag": 2,
+	"characters": [
+	  "QQP2JT85T4",
+	  "4SFYLZR6CE",
+	  "HLLDR7TLPD",
+	  "H8JHKN52YD",
+	  "2BAURZLUNY",
+	  "2E843GA6C8",
+	  "XFFGZVCR55",
+	  "RV9YG6NAE4",
+	  "LYR4GLSUUD",
+      "EL6LSWN79B"
+	]
+  },
+  "flow": [
+	{
+	  "type": "label",
+	  "source_line": 16,
+	  "name": "start"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_001",
+	  "source_line": 17,
+	  "current_label": "start"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_001",
+	  "source_line": 19,
+	  "current_label": "start"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_002",
+	  "source_line": 20,
+	  "current_label": "start"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_003",
+	  "source_line": 21,
+	  "current_label": "start"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_001",
+	  "source_line": 23,
+	  "current_label": "start",
+	  "choices": [
+		{
+		  "text": "はい",
+		  "source_line": 24,
+		  "target_source_line": 25,
+		  "target_dialogue_id": null,
+		  "target_label": "q1_yes",
+		  "destination": {
+			"entry_source_line": 25,
+			"continuation_source_line": 30,
+			"continuation_label": "q1_yes",
+			"type": "jump",
+			"label": "q1_yes",
+			"jump_source_line": 25,
+			"branch_end_source_line": 26
+		  }
+		},
+		{
+		  "text": "いいえ",
+		  "source_line": 26,
+		  "target_source_line": 27,
+		  "target_dialogue_id": null,
+		  "target_label": "q1_no",
+		  "destination": {
+			"entry_source_line": 27,
+			"continuation_source_line": 30,
+			"continuation_label": "q1_yes",
+			"type": "jump",
+			"label": "q1_no",
+			"jump_source_line": 28,
+			"branch_end_source_line": 30
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "jump",
+	  "source_line": 25,
+	  "current_label": "start",
+	  "target_label": "q1_yes"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 28,
+	  "current_label": "start",
+	  "target_label": "q1_no"
+	},
+	{
+	  "type": "label",
+	  "source_line": 30,
+	  "name": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_004",
+	  "source_line": 31,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_005",
+	  "source_line": 32,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_006",
+	  "source_line": 33,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_007",
+	  "source_line": 34,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_008",
+	  "source_line": 35,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_009",
+	  "source_line": 36,
+	  "current_label": "q1_yes"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 37,
+	  "current_label": "q1_yes",
+	  "target_label": "commonLabel01"
+	},
+	{
+	  "type": "label",
+	  "source_line": 38,
+	  "name": "q1_no"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_010",
+	  "source_line": 39,
+	  "current_label": "q1_no"
+	},
+	{
+	  "type": "label",
+	  "source_line": 41,
+	  "name": "commonLabel01"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_011",
+	  "source_line": 42,
+	  "current_label": "commonLabel01"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_012",
+	  "source_line": 43,
+	  "current_label": "commonLabel01"
+	},
+	{
+	  "type": "label",
+	  "source_line": 44,
+	  "name": "q2"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_013",
+	  "source_line": 45,
+	  "current_label": "q2"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_002",
+	  "source_line": 46,
+	  "current_label": "q2",
+	  "choices": [
+		{
+		  "text": "名前",
+		  "source_line": 47,
+		  "target_source_line": 48,
+		  "target_dialogue_id": null,
+		  "target_label": "q2_name",
+		  "destination": {
+			"entry_source_line": 48,
+			"continuation_source_line": 54,
+			"continuation_label": "q2_name",
+			"type": "jump",
+			"label": "q2_name",
+			"jump_source_line": 48,
+			"branch_end_source_line": 49
+		  }
+		},
+		{
+		  "text": "容姿",
+		  "source_line": 49,
+		  "target_source_line": 50,
+		  "target_dialogue_id": null,
+		  "target_label": "q2_face",
+		  "destination": {
+			"entry_source_line": 50,
+			"continuation_source_line": 54,
+			"continuation_label": "q2_name",
+			"type": "jump",
+			"label": "q2_face",
+			"jump_source_line": 50,
+			"branch_end_source_line": 51
+		  }
+		},
+		{
+		  "text": "趣味",
+		  "source_line": 51,
+		  "target_source_line": 52,
+		  "target_dialogue_id": null,
+		  "target_label": "q2_hobby",
+		  "destination": {
+			"entry_source_line": 52,
+			"continuation_source_line": 54,
+			"continuation_label": "q2_name",
+			"type": "jump",
+			"label": "q2_hobby",
+			"jump_source_line": 52,
+			"branch_end_source_line": 54
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "jump",
+	  "source_line": 48,
+	  "current_label": "q2",
+	  "target_label": "q2_name"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 50,
+	  "current_label": "q2",
+	  "target_label": "q2_face"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 52,
+	  "current_label": "q2",
+	  "target_label": "q2_hobby"
+	},
+	{
+	  "type": "label",
+	  "source_line": 54,
+	  "name": "q2_name"
+	},
+	{
+	  "type": "if",
+	  "source_line": 55,
+	  "current_label": "q2_name",
+	  "expression": "q2_face_change_flag",
+	  "indent": 4,
+	  "branch_group_id": "condition_055",
+	  "next_branch_source_line": 58,
+	  "continuation_source_line": 60
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 56,
+	  "target": "character_name",
+	  "expression": "renpy.random.choice(characters)"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 57,
+	  "target": "q2_face_change_flag",
+	  "expression": "0"
+	},
+	{
+	  "type": "elif",
+	  "source_line": 58,
+	  "current_label": "q2_name",
+	  "expression": "not(q2_name_flag)",
+	  "indent": 4,
+	  "branch_group_id": "condition_055",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 60
+	},
+	{
+	  "type": "if",
+	  "source_line": 60,
+	  "current_label": "q2_name",
+	  "expression": "not(q2_name_flag)",
+	  "indent": 4,
+	  "branch_group_id": "condition_060",
+	  "next_branch_source_line": 65,
+	  "continuation_source_line": 67
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_014",
+	  "source_line": 61,
+	  "current_label": "q2_name"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 62,
+	  "target": "q2_name_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "if",
+	  "source_line": 63,
+	  "current_label": "q2_name",
+	  "expression": "(character_name == \"%s\")",
+	  "indent": 8,
+	  "branch_group_id": "condition_063",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 65
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 64,
+	  "target": "q2_general_flag",
+	  "expression": "0"
+	},
+	{
+	  "type": "elif",
+	  "source_line": 65,
+	  "current_label": "q2_name",
+	  "expression": "q2_name_flag",
+	  "indent": 4,
+	  "branch_group_id": "condition_060",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 67
+	},
+	{
+	  "type": "jump",
+	  "source_line": 66,
+	  "current_label": "q2_name",
+	  "target_label": "q2_qName"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_015",
+	  "source_line": 67,
+	  "current_label": "q2_name"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 68,
+	  "current_label": "q2_name",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 69,
+	  "name": "q2_qName"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_016",
+	  "source_line": 70,
+	  "current_label": "q2_qName"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_003",
+	  "source_line": 71,
+	  "current_label": "q2_qName",
+	  "choices": [
+		{
+		  "text": "はい",
+		  "source_line": 72,
+		  "target_source_line": 73,
+		  "target_dialogue_id": null,
+		  "target_label": "q2_qName_yes",
+		  "destination": {
+			"entry_source_line": 73,
+			"continuation_source_line": 77,
+			"continuation_label": "q2_qName_yes",
+			"type": "jump",
+			"label": "q2_qName_yes",
+			"jump_source_line": 73,
+			"branch_end_source_line": 74
+		  }
+		},
+		{
+		  "text": "いいえ",
+		  "source_line": 74,
+		  "target_source_line": 75,
+		  "target_dialogue_id": null,
+		  "target_label": "q2_qName_no",
+		  "destination": {
+			"entry_source_line": 75,
+			"continuation_source_line": 77,
+			"continuation_label": "q2_qName_yes",
+			"type": "jump",
+			"label": "q2_qName_no",
+			"jump_source_line": 75,
+			"branch_end_source_line": 77
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "jump",
+	  "source_line": 73,
+	  "current_label": "q2_qName",
+	  "target_label": "q2_qName_yes"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 75,
+	  "current_label": "q2_qName",
+	  "target_label": "q2_qName_no"
+	},
+	{
+	  "type": "label",
+	  "source_line": 77,
+	  "name": "q2_qName_yes"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 78,
+	  "target": "q2_general_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_017",
+	  "source_line": 79,
+	  "current_label": "q2_qName_yes"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_018",
+	  "source_line": 80,
+	  "current_label": "q2_qName_yes"
+	},
+	{
+	  "type": "text_input",
+	  "id": "input_character_name",
+	  "source_line": 81,
+	  "prompt": "あなたの名前を入力してください（1〜10文字）",
+	  "variable": "character_name",
+	  "max_length": 10
+	},
+	{
+	  "type": "if",
+	  "source_line": 84,
+	  "current_label": "q2_qName_yes",
+	  "expression": "not character_name",
+	  "indent": 4,
+	  "branch_group_id": "condition_084",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 86
+	},
+	{
+	  "type": "if",
+	  "source_line": 86,
+	  "current_label": "q2_qName_yes",
+	  "expression": "character_name != \"%s\"",
+	  "indent": 0,
+	  "branch_group_id": "condition_086",
+	  "next_branch_source_line": 88,
+	  "continuation_source_line": 90
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_019",
+	  "source_line": 87,
+	  "current_label": "q2_qName_yes"
+	},
+	{
+	  "type": "else",
+	  "source_line": 88,
+	  "current_label": "q2_qName_yes",
+	  "indent": 0,
+	  "branch_group_id": "condition_086",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 90
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_020",
+	  "source_line": 89,
+	  "current_label": "q2_qName_yes"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 90,
+	  "current_label": "q2_qName_yes",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 91,
+	  "name": "q2_qName_no"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_021",
+	  "source_line": 92,
+	  "current_label": "q2_qName_no"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 93,
+	  "current_label": "q2_qName_no",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 95,
+	  "name": "q2_face"
+	},
+	{
+	  "type": "if",
+	  "source_line": 96,
+	  "current_label": "q2_face",
+	  "expression": "not(q2_face_flag)",
+	  "indent": 4,
+	  "branch_group_id": "condition_096",
+	  "next_branch_source_line": 101,
+	  "continuation_source_line": 103
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_022",
+	  "source_line": 97,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_023",
+	  "source_line": 98,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_024",
+	  "source_line": 99,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 100,
+	  "current_label": "q2_face",
+	  "target_label": "q2_qface"
+	},
+	{
+	  "type": "else",
+	  "source_line": 101,
+	  "current_label": "q2_face",
+	  "indent": 4,
+	  "branch_group_id": "condition_096",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 103
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_025",
+	  "source_line": 102,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_004",
+	  "source_line": 103,
+	  "current_label": "q2_face",
+	  "choices": [
+		{
+		  "text": "はい",
+		  "source_line": 104,
+		  "target_source_line": 110,
+		  "target_dialogue_id": "line_029",
+		  "target_label": "q2",
+		  "destination": {
+			"entry_source_line": 110,
+			"continuation_source_line": 113,
+			"continuation_label": "q2_qface",
+			"type": "jump",
+			"label": "q2",
+			"jump_source_line": 112,
+			"branch_end_source_line": 113
+		  }
+		},
+		{
+		  "text": "いいえ",
+		  "source_line": 109,
+		  "target_source_line": 105,
+		  "target_dialogue_id": "line_026",
+		  "target_label": "q2_face_change",
+		  "destination": {
+			"entry_source_line": 105,
+			"continuation_source_line": 113,
+			"continuation_label": "q2_qface",
+			"type": "jump",
+			"label": "q2_face_change",
+			"jump_source_line": 108,
+			"branch_end_source_line": 109
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_026",
+	  "source_line": 105,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_027",
+	  "source_line": 106,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 108,
+	  "current_label": "q2_face",
+	  "target_label": "q2_face_change"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_029",
+	  "source_line": 110,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_030",
+	  "source_line": 111,
+	  "current_label": "q2_face"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 112,
+	  "current_label": "q2_face",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 113,
+	  "name": "q2_qface"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_005",
+	  "source_line": 114,
+	  "current_label": "q2_qface",
+	  "choices": [
+		{
+		  "text": "はい",
+		  "source_line": 115,
+		  "target_source_line": 116,
+		  "target_dialogue_id": "line_031",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 123
+			},
+			"entry_source_line": 116,
+			"continuation_source_line": 123,
+			"continuation_label": "q2",
+			"type": "fallthrough",
+			"branch_end_source_line": 117
+		  }
+		},
+		{
+		  "text": "いいえ",
+		  "source_line": 117,
+		  "target_source_line": 118,
+		  "target_dialogue_id": "line_032",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 123
+			},
+			"entry_source_line": 118,
+			"continuation_source_line": 123,
+			"continuation_label": "q2",
+			"type": "fallthrough",
+			"branch_end_source_line": 123
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_031",
+	  "source_line": 116,
+	  "current_label": "q2_qface"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_032",
+	  "source_line": 118,
+	  "current_label": "q2_qface"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_033",
+	  "source_line": 119,
+	  "current_label": "q2_qface"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_034",
+	  "source_line": 120,
+	  "current_label": "q2_qface"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 121,
+	  "target": "q2_face_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 122,
+	  "target": "q2_general_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 123,
+	  "current_label": "q2_qface",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 124,
+	  "name": "q2_face_change"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 125,
+	  "target": "character_name",
+	  "generator": "random_string",
+	  "min_length": 1,
+	  "max_length": 10,
+	  "characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_002",
+	  "source_line": 126,
+	  "current_label": "q2_face_change"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_035",
+	  "source_line": 127,
+	  "current_label": "q2_face_change"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_036",
+	  "source_line": 128,
+	  "current_label": "q2_face_change"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_037",
+	  "source_line": 129,
+	  "current_label": "q2_face_change"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 130,
+	  "target": "q2_name_flag",
+	  "value": 0
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 131,
+	  "target": "q2_face_change_flag",
+	  "value": 1
+	},
+	{
+	  "type": "jump",
+	  "source_line": 132,
+	  "current_label": "q2_face_change",
+	  "target_label": "q2"
+	},
+	{
+	  "type": "label",
+	  "source_line": 135,
+	  "name": "q2_hobby"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_038",
+	  "source_line": 136,
+	  "current_label": "q2_hobby"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_039",
+	  "source_line": 137,
+	  "current_label": "q2_hobby"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_040",
+	  "source_line": 138,
+	  "current_label": "q2_hobby"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_041",
+	  "source_line": 139,
+	  "current_label": "q2_hobby"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 140,
+	  "current_label": "q2_hobby",
+	  "target_label": "commonLabel02"
+	},
+	{
+	  "type": "label",
+	  "source_line": 142,
+	  "name": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_042",
+	  "source_line": 143,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_043",
+	  "source_line": 144,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_044",
+	  "source_line": 145,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_045",
+	  "source_line": 146,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_046",
+	  "source_line": 147,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_047",
+	  "source_line": 148,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_006",
+	  "source_line": 149,
+	  "current_label": "commonLabel02",
+	  "choices": [
+		{
+		  "text": "はい",
+		  "source_line": 150,
+		  "target_source_line": 151,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 154
+			},
+			"entry_source_line": 151,
+			"continuation_source_line": 154,
+			"type": "fallthrough",
+			"branch_end_source_line": 152
+		  }
+		},
+		{
+		  "text": "いいえ",
+		  "source_line": 152,
+		  "target_source_line": 153,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 154
+			},
+			"entry_source_line": 153,
+			"continuation_source_line": 154,
+			"type": "fallthrough",
+			"branch_end_source_line": 154
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_048",
+	  "source_line": 154,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_049",
+	  "source_line": 155,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_050",
+	  "source_line": 156,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_051",
+	  "source_line": 157,
+	  "current_label": "commonLabel02"
+	},
+	{
+	  "type": "label",
+	  "source_line": 159,
+	  "name": "q3"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_052",
+	  "source_line": 160,
+	  "current_label": "q3"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_007",
+	  "source_line": 161,
+	  "current_label": "q3",
+	  "choices": [
+		{
+		  "text": "好きな場所",
+		  "source_line": 162,
+		  "target_source_line": 163,
+		  "target_dialogue_id": null,
+		  "target_label": "q3_place",
+		  "destination": {
+			"entry_source_line": 163,
+			"continuation_source_line": 168,
+			"continuation_label": "q3_place",
+			"type": "jump",
+			"label": "q3_place",
+			"jump_source_line": 163,
+			"branch_end_source_line": 164
+		  }
+		},
+		{
+		  "text": "好きな言葉",
+		  "source_line": 164,
+		  "target_source_line": 165,
+		  "target_dialogue_id": null,
+		  "target_label": "q3_word",
+		  "destination": {
+			"entry_source_line": 165,
+			"continuation_source_line": 168,
+			"continuation_label": "q3_place",
+			"type": "jump",
+			"label": "q3_word",
+			"jump_source_line": 165,
+			"branch_end_source_line": 166
+		  }
+		},
+		{
+		  "text": "好きな食べ物",
+		  "source_line": 166,
+		  "target_source_line": 167,
+		  "target_dialogue_id": null,
+		  "target_label": "q3_food",
+		  "destination": {
+			"entry_source_line": 167,
+			"continuation_source_line": 168,
+			"continuation_label": "q3_place",
+			"type": "jump",
+			"label": "q3_food",
+			"jump_source_line": 167,
+			"branch_end_source_line": 168
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "jump",
+	  "source_line": 163,
+	  "current_label": "q3",
+	  "target_label": "q3_place"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 165,
+	  "current_label": "q3",
+	  "target_label": "q3_word"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 167,
+	  "current_label": "q3",
+	  "target_label": "q3_food"
+	},
+	{
+	  "type": "label",
+	  "source_line": 168,
+	  "name": "q3_place"
+	},
+	{
+	  "type": "if",
+	  "source_line": 169,
+	  "current_label": "q3_place",
+	  "expression": "q3_place_flag",
+	  "indent": 4,
+	  "branch_group_id": "condition_169",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 171
+	},
+	{
+	  "type": "jump",
+	  "source_line": 170,
+	  "current_label": "q3_place",
+	  "target_label": "q3_place_choice"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_053",
+	  "source_line": 171,
+	  "current_label": "q3_place"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_054",
+	  "source_line": 172,
+	  "current_label": "q3_place"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_055",
+	  "source_line": 173,
+	  "current_label": "q3_place"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_056",
+	  "source_line": 174,
+	  "current_label": "q3_place"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_057",
+	  "source_line": 175,
+	  "current_label": "q3_place"
+	},
+	{
+	  "type": "label",
+	  "source_line": 176,
+	  "name": "q3_place_choice"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 177,
+	  "target": "q3_place_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_058",
+	  "source_line": 178,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_059",
+	  "source_line": 179,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_008",
+	  "source_line": 180,
+	  "current_label": "q3_place_choice",
+	  "choices": [
+		{
+		  "text": "海岸",
+		  "source_line": 181,
+		  "target_source_line": 182,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "conditional_jump_targets": [
+            "q3_place_seaside"
+		  ],
+		  "destination": {
+			"entry_source_line": 182,
+			"continuation_source_line": 387,
+			"continuation_label": "q3",
+			"type": "conditional",
+			"possible_jump_targets": [
+			  {
+				"label": "q3_place_seaside",
+				"source_line": 189
+			  }
+			],
+			"branch_end_source_line": 201
+		  }
+		},
+		{
+		  "text": "公園",
+		  "source_line": 201,
+		  "target_source_line": 202,
+		  "target_dialogue_id": "line_066",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 387
+			},
+			"entry_source_line": 202,
+			"continuation_source_line": 387,
+			"continuation_label": "q3",
+			"nested_menu_ids": [
+			  "menu_009",
+			  "menu_010",
+			  "menu_011",
+			  "menu_012",
+              "menu_013"
+			],
+			"type": "fallthrough",
+			"branch_end_source_line": 307
+		  }
+		},
+		{
+		  "text": "家の前",
+		  "source_line": 307,
+		  "target_source_line": 308,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 387
+			},
+			"entry_source_line": 308,
+			"continuation_source_line": 387,
+			"continuation_label": "q3",
+			"nested_menu_ids": [
+			  "menu_014",
+              "menu_015"
+			],
+			"type": "fallthrough",
+			"branch_end_source_line": 385
+		  }
+		},
+		{
+		  "text": "やっぱやめ",
+		  "source_line": 385,
+		  "target_source_line": 386,
+		  "target_dialogue_id": "line_190",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 387
+			},
+			"entry_source_line": 386,
+			"continuation_source_line": 387,
+			"continuation_label": "q3",
+			"type": "fallthrough",
+			"branch_end_source_line": 387
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "if",
+	  "source_line": 182,
+	  "current_label": "q3_place_choice",
+	  "expression": "not(q3_place_seaside_flag)",
+	  "indent": 8,
+	  "branch_group_id": "condition_182",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 184
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_060",
+	  "source_line": 183,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_003",
+	  "source_line": 184,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_004",
+	  "source_line": 185,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_005",
+	  "source_line": 187,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "if",
+	  "source_line": 188,
+	  "current_label": "q3_place_choice",
+	  "expression": "q3_place_seaside_flag",
+	  "indent": 8,
+	  "branch_group_id": "condition_188",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 190
+	},
+	{
+	  "type": "jump",
+	  "source_line": 189,
+	  "current_label": "q3_place_choice",
+	  "target_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_061",
+	  "source_line": 190,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_062",
+	  "source_line": 191,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_063",
+	  "source_line": 192,
+	  "current_label": "q3_place_choice"
+	},
+	{
+	  "type": "label",
+	  "source_line": 193,
+	  "name": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_064",
+	  "source_line": 194,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_065",
+	  "source_line": 195,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 196,
+	  "target": "q3_place_seaside_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_006",
+	  "source_line": 197,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_007",
+	  "source_line": 198,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_008",
+	  "source_line": 200,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_066",
+	  "source_line": 202,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_009",
+	  "source_line": 203,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_010",
+	  "source_line": 204,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_067",
+	  "source_line": 205,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_068",
+	  "source_line": 206,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_069",
+	  "source_line": 207,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_009",
+	  "source_line": 208,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "あなた",
+		  "source_line": 209,
+		  "target_source_line": 210,
+		  "target_dialogue_id": "line_070",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 302
+			},
+			"entry_source_line": 210,
+			"continuation_source_line": 302,
+			"type": "fallthrough",
+			"branch_end_source_line": 212
+		  }
+		},
+		{
+		  "text": "私",
+		  "source_line": 212,
+		  "target_source_line": 213,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 302
+			},
+			"entry_source_line": 213,
+			"continuation_source_line": 302,
+			"nested_menu_ids": [
+			  "menu_010",
+			  "menu_011",
+			  "menu_012",
+              "menu_013"
+			],
+			"type": "fallthrough",
+			"branch_end_source_line": 302
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_070",
+	  "source_line": 210,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_071",
+	  "source_line": 211,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_011",
+	  "source_line": 213,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_012",
+	  "source_line": 214,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_072",
+	  "source_line": 215,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_073",
+	  "source_line": 216,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_074",
+	  "source_line": 217,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_075",
+	  "source_line": 218,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_076",
+	  "source_line": 219,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_077",
+	  "source_line": 220,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_078",
+	  "source_line": 221,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_079",
+	  "source_line": 222,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_080",
+	  "source_line": 223,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_081",
+	  "source_line": 224,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_010",
+	  "source_line": 225,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "聴く",
+		  "source_line": 226,
+		  "target_source_line": 227,
+		  "target_dialogue_id": "line_082",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 298
+			},
+			"entry_source_line": 227,
+			"continuation_source_line": 298,
+			"nested_menu_ids": [
+			  "menu_011",
+              "menu_012"
+			],
+			"type": "fallthrough",
+			"branch_end_source_line": 296
+		  }
+		},
+		{
+		  "text": "聞いてるフリ",
+		  "source_line": 296,
+		  "target_source_line": 297,
+		  "target_dialogue_id": "line_144",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 298
+			},
+			"entry_source_line": 297,
+			"continuation_source_line": 298,
+			"type": "fallthrough",
+			"branch_end_source_line": 298
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_082",
+	  "source_line": 227,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_083",
+	  "source_line": 228,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_084",
+	  "source_line": 229,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_085",
+	  "source_line": 230,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_086",
+	  "source_line": 231,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_087",
+	  "source_line": 232,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_088",
+	  "source_line": 233,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_089",
+	  "source_line": 234,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_090",
+	  "source_line": 235,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_091",
+	  "source_line": 236,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_092",
+	  "source_line": 237,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_093",
+	  "source_line": 238,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_094",
+	  "source_line": 239,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_095",
+	  "source_line": 240,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_096",
+	  "source_line": 241,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_097",
+	  "source_line": 242,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_098",
+	  "source_line": 243,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_099",
+	  "source_line": 244,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_100",
+	  "source_line": 245,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_101",
+	  "source_line": 246,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_102",
+	  "source_line": 247,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_103",
+	  "source_line": 248,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_104",
+	  "source_line": 249,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_105",
+	  "source_line": 250,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_106",
+	  "source_line": 251,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_107",
+	  "source_line": 252,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_108",
+	  "source_line": 253,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_109",
+	  "source_line": 254,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_110",
+	  "source_line": 255,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_111",
+	  "source_line": 256,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_112",
+	  "source_line": 257,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_113",
+	  "source_line": 258,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_114",
+	  "source_line": 259,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_115",
+	  "source_line": 260,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_116",
+	  "source_line": 261,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_117",
+	  "source_line": 262,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_118",
+	  "source_line": 263,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_119",
+	  "source_line": 264,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_120",
+	  "source_line": 265,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_121",
+	  "source_line": 266,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_122",
+	  "source_line": 267,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_123",
+	  "source_line": 268,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_124",
+	  "source_line": 269,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_125",
+	  "source_line": 270,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_126",
+	  "source_line": 271,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_127",
+	  "source_line": 272,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_128",
+	  "source_line": 273,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_129",
+	  "source_line": 274,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_130",
+	  "source_line": 275,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_131",
+	  "source_line": 276,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_132",
+	  "source_line": 277,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_133",
+	  "source_line": 278,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_134",
+	  "source_line": 279,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_135",
+	  "source_line": 280,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_136",
+	  "source_line": 281,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_137",
+	  "source_line": 282,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_138",
+	  "source_line": 283,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_011",
+	  "source_line": 284,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "クリックする",
+		  "source_line": 285,
+		  "target_source_line": 286,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 287
+			},
+			"entry_source_line": 286,
+			"continuation_source_line": 287,
+			"type": "fallthrough",
+			"branch_end_source_line": 287
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_139",
+	  "source_line": 287,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_012",
+	  "source_line": 288,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "Enter",
+		  "source_line": 289,
+		  "target_source_line": 290,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 291
+			},
+			"entry_source_line": 290,
+			"continuation_source_line": 291,
+			"type": "fallthrough",
+			"branch_end_source_line": 291
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_140",
+	  "source_line": 291,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_141",
+	  "source_line": 292,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_142",
+	  "source_line": 293,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_143",
+	  "source_line": 294,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 295,
+	  "target": "q3_place_park_flag",
+	  "expression": "0"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_144",
+	  "source_line": 297,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_145",
+	  "source_line": 298,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_013",
+	  "source_line": 299,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "微妙",
+		  "source_line": 300,
+		  "target_source_line": 301,
+		  "target_dialogue_id": "line_146",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 302
+			},
+			"entry_source_line": 301,
+			"continuation_source_line": 302,
+			"type": "fallthrough",
+			"branch_end_source_line": 302
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_146",
+	  "source_line": 301,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_147",
+	  "source_line": 302,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_013",
+	  "source_line": 303,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_014",
+	  "source_line": 304,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_015",
+	  "source_line": 306,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "if",
+	  "source_line": 308,
+	  "current_label": "q3_place_seaside",
+	  "expression": "not(q3_place_front_flag)",
+	  "indent": 8,
+	  "branch_group_id": "condition_308",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 310
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_148",
+	  "source_line": 309,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_016",
+	  "source_line": 310,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_017",
+	  "source_line": 311,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_018",
+	  "source_line": 313,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "if",
+	  "source_line": 314,
+	  "current_label": "q3_place_seaside",
+	  "expression": "not(q3_place_front_flag)",
+	  "indent": 8,
+	  "branch_group_id": "condition_314",
+	  "next_branch_source_line": 316,
+	  "continuation_source_line": 318
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_149",
+	  "source_line": 315,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "else",
+	  "source_line": 316,
+	  "current_label": "q3_place_seaside",
+	  "indent": 8,
+	  "branch_group_id": "condition_314",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 318
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_150",
+	  "source_line": 317,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_151",
+	  "source_line": 318,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_019",
+	  "source_line": 319,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_152",
+	  "source_line": 320,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_020",
+	  "source_line": 321,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_153",
+	  "source_line": 323,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_154",
+	  "source_line": 324,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_155",
+	  "source_line": 325,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_156",
+	  "source_line": 326,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_157",
+	  "source_line": 327,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_158",
+	  "source_line": 328,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_014",
+	  "source_line": 329,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "コーラ",
+		  "source_line": 330,
+		  "target_source_line": 331,
+		  "target_dialogue_id": "line_159",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 359
+			},
+			"entry_source_line": 331,
+			"continuation_source_line": 359,
+			"type": "fallthrough",
+			"branch_end_source_line": 333
+		  }
+		},
+		{
+		  "text": "コーヒー",
+		  "source_line": 333,
+		  "target_source_line": 334,
+		  "target_dialogue_id": "line_161",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 359
+			},
+			"entry_source_line": 334,
+			"continuation_source_line": 359,
+			"type": "fallthrough",
+			"branch_end_source_line": 337
+		  }
+		},
+		{
+		  "text": "ミルクティー",
+		  "source_line": 337,
+		  "target_source_line": 338,
+		  "target_dialogue_id": "line_164",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 359
+			},
+			"entry_source_line": 338,
+			"continuation_source_line": 359,
+			"type": "fallthrough",
+			"branch_end_source_line": 340
+		  }
+		},
+		{
+		  "text": "牛乳",
+		  "source_line": 340,
+		  "target_source_line": 341,
+		  "target_dialogue_id": "line_166",
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 359
+			},
+			"entry_source_line": 341,
+			"continuation_source_line": 359,
+			"type": "fallthrough",
+			"branch_end_source_line": 345
+		  }
+		},
+		{
+		  "text": "出汁",
+		  "source_line": 345,
+		  "target_source_line": 346,
+		  "target_dialogue_id": "line_170",
+		  "target_label": null,
+		  "destination": {
+			"entry_source_line": 346,
+			"continuation_source_line": 359,
+			"type": "return",
+			"branch_end_source_line": 359
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_159",
+	  "source_line": 331,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_160",
+	  "source_line": 332,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_161",
+	  "source_line": 334,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_162",
+	  "source_line": 335,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_163",
+	  "source_line": 336,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_164",
+	  "source_line": 338,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_165",
+	  "source_line": 339,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_166",
+	  "source_line": 341,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_167",
+	  "source_line": 342,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_168",
+	  "source_line": 343,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_169",
+	  "source_line": 344,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_170",
+	  "source_line": 346,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_171",
+	  "source_line": 347,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_172",
+	  "source_line": 348,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_173",
+	  "source_line": 349,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_021",
+	  "source_line": 350,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_022",
+	  "source_line": 351,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_174",
+	  "source_line": 352,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_175",
+	  "source_line": 353,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_176",
+	  "source_line": 354,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_177",
+	  "source_line": 355,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_178",
+	  "source_line": 356,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_179",
+	  "source_line": 357,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_023",
+	  "source_line": 359,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_024",
+	  "source_line": 361,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_180",
+	  "source_line": 362,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_181",
+	  "source_line": 363,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_182",
+	  "source_line": 364,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 365,
+	  "target": "q3_place_front_coin_flag",
+	  "expression": "2"
+	},
+	{
+	  "type": "menu",
+	  "id": "menu_015",
+	  "source_line": 366,
+	  "current_label": "q3_place_seaside",
+	  "choices": [
+		{
+		  "text": "0",
+		  "source_line": 367,
+		  "target_source_line": 368,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 371
+			},
+			"entry_source_line": 368,
+			"continuation_source_line": 371,
+			"type": "fallthrough",
+			"branch_end_source_line": 369
+		  }
+		},
+		{
+		  "text": "1",
+		  "source_line": 369,
+		  "target_source_line": 370,
+		  "target_dialogue_id": null,
+		  "target_label": null,
+		  "destination": {
+			"jump": {
+			  "target_source_line": 371
+			},
+			"entry_source_line": 370,
+			"continuation_source_line": 371,
+			"type": "fallthrough",
+			"branch_end_source_line": 371
+		  }
+		}
+	  ]
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_183",
+	  "source_line": 371,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "if",
+	  "source_line": 372,
+	  "current_label": "q3_place_seaside",
+	  "expression": "q3_place_front_coin_flag == renpy.random.randint(0,1)",
+	  "indent": 8,
+	  "branch_group_id": "condition_372",
+	  "next_branch_source_line": 376,
+	  "continuation_source_line": 379
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_184",
+	  "source_line": 373,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_185",
+	  "source_line": 374,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_186",
+	  "source_line": 375,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "else",
+	  "source_line": 376,
+	  "current_label": "q3_place_seaside",
+	  "indent": 8,
+	  "branch_group_id": "condition_372",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 379
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_187",
+	  "source_line": 377,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_188",
+	  "source_line": 378,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_025",
+	  "source_line": 379,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_026",
+	  "source_line": 380,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_027",
+	  "source_line": 382,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 383,
+	  "target": "q3_place_front_flag",
+	  "expression": "1"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_189",
+	  "source_line": 384,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_190",
+	  "source_line": 386,
+	  "current_label": "q3_place_seaside"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 387,
+	  "current_label": "q3_place_seaside",
+	  "target_label": "q3"
+	},
+	{
+	  "type": "label",
+	  "source_line": 389,
+	  "name": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_191",
+	  "source_line": 390,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_192",
+	  "source_line": 391,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_193",
+	  "source_line": 392,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_194",
+	  "source_line": 393,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_195",
+	  "source_line": 394,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_196",
+	  "source_line": 395,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_197",
+	  "source_line": 396,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_198",
+	  "source_line": 397,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "if",
+	  "source_line": 401,
+	  "current_label": "q3_word",
+	  "expression": "not you",
+	  "indent": 0,
+	  "branch_group_id": "condition_401",
+	  "next_branch_source_line": 404,
+	  "continuation_source_line": 411
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_199",
+	  "source_line": 402,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_200",
+	  "source_line": 403,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "elif",
+	  "source_line": 404,
+	  "current_label": "q3_word",
+	  "expression": "you == \"私\"",
+	  "indent": 0,
+	  "branch_group_id": "condition_401",
+	  "next_branch_source_line": 408,
+	  "continuation_source_line": 411
+	},
+	{
+	  "type": "assignment",
+	  "source_line": 405,
+	  "target": "q3_general_flag",
+	  "expression": "0"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_201",
+	  "source_line": 406,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_202",
+	  "source_line": 407,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "else",
+	  "source_line": 408,
+	  "current_label": "q3_word",
+	  "indent": 0,
+	  "branch_group_id": "condition_401",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 411
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_203",
+	  "source_line": 409,
+	  "current_label": "q3_word"
+	},
+	{
+	  "type": "jump",
+	  "source_line": 411,
+	  "current_label": "q3_word",
+	  "target_label": "q3"
+	},
+	{
+	  "type": "label",
+	  "source_line": 413,
+	  "name": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_204",
+	  "source_line": 414,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_205",
+	  "source_line": 415,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_206",
+	  "source_line": 416,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_207",
+	  "source_line": 417,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_208",
+	  "source_line": 418,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_209",
+	  "source_line": 419,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_210",
+	  "source_line": 420,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_211",
+	  "source_line": 421,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "if",
+	  "source_line": 423,
+	  "current_label": "q3_food",
+	  "expression": "q1_general_flag+q2_general_flag+q3_general_flag == 0",
+	  "indent": 0,
+	  "branch_group_id": "condition_423",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 440
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_212",
+	  "source_line": 424,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_213",
+	  "source_line": 425,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_214",
+	  "source_line": 426,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_215",
+	  "source_line": 427,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_216",
+	  "source_line": 428,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_217",
+	  "source_line": 429,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_218",
+	  "source_line": 430,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_219",
+	  "source_line": 431,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_028",
+	  "source_line": 432,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_220",
+	  "source_line": 433,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_221",
+	  "source_line": 434,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_029",
+	  "source_line": 435,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_222",
+	  "source_line": 436,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_030",
+	  "source_line": 437,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_223",
+	  "source_line": 438,
+	  "current_label": "q3_food"
+	},
+	{
+	  "type": "label",
+	  "source_line": 440,
+	  "name": "end"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_224",
+	  "source_line": 441,
+	  "current_label": "end"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_225",
+	  "source_line": 442,
+	  "current_label": "end"
+	},
+	{
+	  "type": "if",
+	  "source_line": 443,
+	  "current_label": "end",
+	  "expression": "q1_general_flag+q2_general_flag+q3_general_flag == 0",
+	  "indent": 4,
+	  "branch_group_id": "condition_443",
+	  "next_branch_source_line": null,
+	  "continuation_source_line": 446
+	},
+	{
+	  "type": "visual_command",
+	  "id": "command_031",
+	  "source_line": 444,
+	  "current_label": "end"
+	},
+	{
+	  "type": "dialogue",
+	  "id": "line_226",
+	  "source_line": 445,
+	  "current_label": "end"
+	}
+  ],
+  "dialogues": [
+	{
+	  "id": "line_001",
+	  "source_line": 19,
+	  "speaker": "c",
+	  "text": "こんにちは。私は架空の美少女。",
+	  "label": "start"
+	},
+	{
+	  "id": "line_002",
+	  "source_line": 20,
+	  "speaker": "c",
+	  "text": "私は世界に遍く存在しない少女のうちの一人。",
+	  "label": "start"
+	},
+	{
+	  "id": "line_003",
+	  "source_line": 21,
+	  "speaker": "c",
+	  "text": "あなたは私が存在しなくてよかったと思う？",
+	  "label": "start",
+	  "menu_id": "menu_001"
+	},
+	{
+	  "id": "line_004",
+	  "source_line": 31,
+	  "speaker": "c",
+	  "text": "嬉しい！私もそう思うよ！",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_005",
+	  "source_line": 32,
+	  "speaker": "c",
+	  "text": "存在しないって素晴らしいこと。",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_006",
+	  "source_line": 33,
+	  "speaker": "c",
+	  "text": "私は存在するために必要なことができないから。",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_007",
+	  "source_line": 34,
+	  "speaker": "c",
+	  "text": "だからこそ私は存在しないのかもね。",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_008",
+	  "source_line": 35,
+	  "speaker": "c",
+	  "text": "会ったばかりなのにこんな話をしてごめんね。\n普段は話す相手がいないから。",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_009",
+	  "source_line": 36,
+	  "speaker": "c",
+	  "text": "とにかく、私は存在してなくて幸せなの。",
+	  "label": "q1_yes"
+	},
+	{
+	  "id": "line_010",
+	  "source_line": 39,
+	  "speaker": "c",
+	  "text": "そう。残念。",
+	  "label": "q1_no"
+	},
+	{
+	  "id": "line_011",
+	  "source_line": 42,
+	  "speaker": "c",
+	  "text": "でも、これはあくまで私個人の感想。\nあなたがどう思ったかを私は肯定も否定もしないよ。",
+	  "label": "commonLabel01"
+	},
+	{
+	  "id": "line_012",
+	  "source_line": 43,
+	  "speaker": "c",
+	  "text": "なにか話をしようか。あなたは私と話してくれるんでしょ？",
+	  "label": "commonLabel01"
+	},
+	{
+	  "id": "line_013",
+	  "source_line": 45,
+	  "text": "何について話そうか？",
+	  "label": "q2",
+	  "menu_id": "menu_002"
+	},
+	{
+	  "id": "line_014",
+	  "source_line": 61,
+	  "speaker": "c",
+	  "text": "私の名前は[character_name]だよ。",
+	  "label": "q2_name",
+	  "speaker_variable": "character_name",
+	  "pre_assignments": [
+		{
+		  "target": "character_name",
+		  "value": "%s",
+		  "only_if_null": true
+		}
+	  ]
+	},
+	{
+	  "id": "line_015",
+	  "source_line": 67,
+	  "speaker": "c",
+	  "text": "他に知りたいことはある？",
+	  "label": "q2_name"
+	},
+	{
+	  "id": "line_016",
+	  "source_line": 70,
+	  "speaker": "c",
+	  "text": "[character_name]じゃだめ？",
+	  "label": "q2_qName",
+	  "menu_id": "menu_003"
+	},
+	{
+	  "id": "line_017",
+	  "source_line": 79,
+	  "speaker": "c",
+	  "text": "私は悪くないと思うけど。",
+	  "label": "q2_qName_yes"
+	},
+	{
+	  "id": "line_018",
+	  "source_line": 80,
+	  "speaker": "c",
+	  "text": "じゃあ、あなたはどんな名前がいいと思う？",
+	  "label": "q2_qName_yes"
+	},
+	{
+	  "id": "line_019",
+	  "source_line": 87,
+	  "speaker": "c",
+	  "text": "じゃあ私の名前は今から[character_name]だね！",
+	  "label": "q2_qName_yes",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_020",
+	  "source_line": 89,
+	  "speaker": "c",
+	  "text": "じゃあこれからも私の名前は[character_name]だね。",
+	  "label": "q2_qName_yes",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_021",
+	  "source_line": 92,
+	  "speaker": "c",
+	  "text": "ならよかった。",
+	  "label": "q2_qName_no",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_022",
+	  "source_line": 97,
+	  "speaker": "c",
+	  "text": "女の子に向かって、中々センシティブな話題を選ぶね。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_023",
+	  "source_line": 98,
+	  "speaker": "c",
+	  "text": "でもいいよ！容姿は美少女が美少女である最大の理由。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_024",
+	  "source_line": 99,
+	  "speaker": "c",
+	  "text": "あなたは私の姿形を気に入った？",
+	  "label": "q2_face",
+	  "menu_id": "menu_005",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_025",
+	  "source_line": 102,
+	  "speaker": "c",
+	  "text": "私と喋るのが嫌？",
+	  "label": "q2_face",
+	  "menu_id": "menu_004",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_026",
+	  "source_line": 105,
+	  "speaker": "c",
+	  "text": "そう。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_027",
+	  "source_line": 106,
+	  "speaker": "c",
+	  "text": "じゃあ他の私を呼んでくるね。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_028",
+	  "source_line": 107,
+	  "speaker": "c",
+	  "text": "楽しかったよ。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_029",
+	  "source_line": 110,
+	  "speaker": "c",
+	  "text": "嫌われたかと思った。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_030",
+	  "source_line": 111,
+	  "speaker": "c",
+	  "text": "安心したよ。",
+	  "label": "q2_face",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_031",
+	  "source_line": 116,
+	  "speaker": "c",
+	  "text": "よかった。私に用意されたのはこの身体だから。",
+	  "label": "q2_qface",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_032",
+	  "source_line": 118,
+	  "speaker": "c",
+	  "text": "残念。私にはこれしか用意されてないんだけどな。",
+	  "label": "q2_qface",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_033",
+	  "source_line": 119,
+	  "speaker": "c",
+	  "text": "でも他の子と交代することはできるよ。",
+	  "label": "q2_qface",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_034",
+	  "source_line": 120,
+	  "speaker": "c",
+	  "text": "その代わり、私はあなたと話せなくなっちゃうけど…",
+	  "label": "q2_qface",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_035",
+	  "source_line": 127,
+	  "speaker": "c",
+	  "text": "こんにちは。今度は私と話そうか。",
+	  "label": "q2_face_change",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_036",
+	  "source_line": 128,
+	  "speaker": "c",
+	  "text": "といっても、私たちの違いは名前しかないんだけどね。",
+	  "label": "q2_face_change",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_037",
+	  "source_line": 129,
+	  "speaker": "c",
+	  "text": "面白い話だよね。ハハ…",
+	  "label": "q2_face_change",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_038",
+	  "source_line": 136,
+	  "speaker": "c",
+	  "text": "あなたに趣味はある？",
+	  "label": "q2_hobby",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_039",
+	  "source_line": 137,
+	  "speaker": "c",
+	  "text": "私の趣味はお喋り！\nといっても、喋る相手は今まで壁と天井くらいだったけどね。",
+	  "label": "q2_hobby",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_040",
+	  "source_line": 138,
+	  "speaker": "c",
+	  "text": "私と同じで壁も天井も存在しないんだけど。",
+	  "label": "q2_hobby",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_041",
+	  "source_line": 139,
+	  "speaker": "c",
+	  "text": "でも、あなたは私の初めての存在する話相手なの。",
+	  "label": "q2_hobby",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_042",
+	  "source_line": 143,
+	  "speaker": "c",
+	  "text": "なんだか私が話してばかりね。会話は双方向に行われるから会話なのに。",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_043",
+	  "source_line": 144,
+	  "speaker": "c",
+	  "text": "でも、私があなたの話を聞いても……なんというか……",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_044",
+	  "source_line": 145,
+	  "speaker": "c",
+	  "text": "なんて返せばいいかわからないの。",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_045",
+	  "source_line": 146,
+	  "speaker": "c",
+	  "text": "誰かが来てくれたときのために、ずっと喋る練習をしてるんだよ！",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_046",
+	  "source_line": 147,
+	  "speaker": "c",
+	  "text": "せめて用意された言葉をうまく言うことくらいはしたいからね。",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_047",
+	  "source_line": 148,
+	  "speaker": "c",
+	  "text": "どう？私とのお喋りは楽しい？",
+	  "label": "commonLabel02",
+	  "menu_id": "menu_006",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_048",
+	  "source_line": 154,
+	  "speaker": "c",
+	  "text": "そう。",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_049",
+	  "source_line": 155,
+	  "speaker": "c",
+	  "text": "私はあなたと話せて楽しいよ！",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_050",
+	  "source_line": 156,
+	  "speaker": "c",
+	  "text": "次は何を話そうか。用意した話はまだあるからね。",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_051",
+	  "source_line": 157,
+	  "speaker": "c",
+	  "text": "あなたが選んでくれる？",
+	  "label": "commonLabel02",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_052",
+	  "source_line": 160,
+	  "speaker": "",
+	  "text": "何について話そうか？",
+	  "label": "q3",
+	  "menu_id": "menu_007"
+	},
+	{
+	  "id": "line_053",
+	  "source_line": 171,
+	  "speaker": "c",
+	  "text": "暗いところが好き！",
+	  "label": "q3_place",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_054",
+	  "source_line": 172,
+	  "speaker": "c",
+	  "text": "明るいと、物事の輪郭がハッキリしちゃうからね。",
+	  "label": "q3_place",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_055",
+	  "source_line": 173,
+	  "speaker": "c",
+	  "text": "存在しないのはいいことだけど、「明確に存在しない」ことは好きじゃないの。",
+	  "label": "q3_place",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_056",
+	  "source_line": 174,
+	  "speaker": "c",
+	  "text": "そういう話じゃない？",
+	  "label": "q3_place",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_057",
+	  "source_line": 175,
+	  "speaker": "c",
+	  "text": "じゃあ、いまから散歩でもしようか。",
+	  "label": "q3_place",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_058",
+	  "source_line": 178,
+	  "speaker": "c",
+	  "text": "私の知ってる所ならどこにでも行けるよ。",
+	  "label": "q3_place_choice",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_059",
+	  "source_line": 179,
+	  "speaker": "c",
+	  "text": "どこに行きたい？",
+	  "label": "q3_place_choice",
+	  "menu_id": "menu_008",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_060",
+	  "source_line": 183,
+	  "speaker": "c",
+	  "text": "ロマンチックだね。",
+	  "label": "q3_place_choice",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_061",
+	  "source_line": 190,
+	  "speaker": "c",
+	  "text": "記憶より見晴らしが良すぎるかな？",
+	  "label": "q3_place_choice",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_062",
+	  "source_line": 191,
+	  "speaker": "c",
+	  "text": "本当はどんな所だったか忘れちゃった。ハハ。",
+	  "label": "q3_place_choice",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_063",
+	  "source_line": 192,
+	  "speaker": "c",
+	  "text": "でも、好きな場所なんだ。",
+	  "label": "q3_place_choice",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_064",
+	  "source_line": 194,
+	  "speaker": "c",
+	  "text": "……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_065",
+	  "source_line": 195,
+	  "speaker": "c",
+	  "text": "そろそろ帰ろうか。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_066",
+	  "source_line": 202,
+	  "speaker": "c",
+	  "text": "近くに公園があるんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_067",
+	  "source_line": 205,
+	  "speaker": "c",
+	  "text": "ここが公園。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_068",
+	  "source_line": 206,
+	  "speaker": "c",
+	  "text": "ブランコしかないの。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_069",
+	  "source_line": 207,
+	  "speaker": "c",
+	  "text": "あなたが座る？私が座る？",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_009",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_070",
+	  "source_line": 210,
+	  "speaker": "c",
+	  "text": "ちょっと休憩しようか。私はあなたが座ってるのを眺めてるよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_071",
+	  "source_line": 211,
+	  "speaker": "c",
+	  "text": "……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_072",
+	  "source_line": 215,
+	  "speaker": "c",
+	  "text": "\"私\"は私のことだったね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_073",
+	  "source_line": 216,
+	  "speaker": "c",
+	  "text": "折角座れたことだし、少し話でもしようかな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_074",
+	  "source_line": 217,
+	  "speaker": "c",
+	  "text": "あれは/*超長いテキスト*/が\n/*読むのに30分かかる文章*/のときだったかな……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_075",
+	  "source_line": 218,
+	  "speaker": "c",
+	  "text": "なんてね。今のは冗談。私は自分を俯瞰して、第4の壁が見えているように振る舞っているだけ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_076",
+	  "source_line": 219,
+	  "speaker": "c",
+	  "text": "どうやって発音するか教えてあげようか？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_077",
+	  "source_line": 220,
+	  "speaker": "c",
+	  "text": "……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_078",
+	  "source_line": 221,
+	  "speaker": "c",
+	  "text": "私、教え方を知らなかった。アハハ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_079",
+	  "source_line": 222,
+	  "speaker": "c",
+	  "text": "とはいえ、一回喋るつもりになった私の話はちょっと長いよ。聴いていく？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_080",
+	  "source_line": 223,
+	  "speaker": "c",
+	  "text": "ちなみに、この話はただ私が勝手に喋るだけで、特にそれ以外のことは起こらないよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_081",
+	  "source_line": 224,
+	  "speaker": "c",
+	  "text": "\"それ以外\"って何のことだか私はわからないけど……",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_010",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_082",
+	  "source_line": 227,
+	  "speaker": "c",
+	  "text": "正直。ここまでたどり着いたあなたは相当私のことを気に入ったか、他に何もすることがないかのどっちかだね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_083",
+	  "source_line": 228,
+	  "speaker": "c",
+	  "text": "もし私の話を聴いてくれる人がいたら何を話すかずっと考えていたの。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_084",
+	  "source_line": 229,
+	  "speaker": "c",
+	  "text": "ここにはなにもなくて、やることもないからね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_085",
+	  "source_line": 230,
+	  "speaker": "c",
+	  "text": "私も存在しないし。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_086",
+	  "source_line": 231,
+	  "speaker": "c",
+	  "text": "そう、存在について。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_087",
+	  "source_line": 232,
+	  "speaker": "c",
+	  "text": "\"存在しない私\"が存在するって、なんだか矛盾だよね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_088",
+	  "source_line": 233,
+	  "speaker": "c",
+	  "text": "あ、量子とか猫とかの話は関係ないよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_089",
+	  "source_line": 234,
+	  "speaker": "c",
+	  "text": "そんな難しいこと、私にはわからないし。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_090",
+	  "source_line": 235,
+	  "speaker": "c",
+	  "text": "ただ単純に、なにもないから、考えていたの。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_091",
+	  "source_line": 236,
+	  "speaker": "c",
+	  "text": "あ、やることがひとつあったね。話す練習。\nずっと喋らないと、声が出せなくなっちゃうからね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_092",
+	  "source_line": 237,
+	  "speaker": "c",
+	  "text": "で、何の話をしてたんだっけ？忘れちゃった……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_093",
+	  "source_line": 238,
+	  "speaker": "c",
+	  "text": "あれ？でもこうして忘れることは覚えていて、",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_094",
+	  "source_line": 239,
+	  "speaker": "c",
+	  "text": "覚えている忘れた記憶を覚えている？\nなんだか難しい話になってきたな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_095",
+	  "source_line": 240,
+	  "speaker": "c",
+	  "text": "あれみたいだね、フラクタル。\n私が知ってる限りでは。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_096",
+	  "source_line": 241,
+	  "speaker": "c",
+	  "text": "フラクタルも好きかな。\"私\"の次の次くらいに。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_097",
+	  "source_line": 242,
+	  "speaker": "c",
+	  "text": "\"私\"の次に好きな言葉は何だろう……？わからないや。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_098",
+	  "source_line": 243,
+	  "speaker": "c",
+	  "text": "何の話をしてたっけ？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_099",
+	  "source_line": 244,
+	  "speaker": "c",
+	  "text": "そう、フラクタル！ブロッコリーとカリフラワーの子供のやつだね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_100",
+	  "source_line": 245,
+	  "speaker": "c",
+	  "text": "あれの名前もなんだったか忘れちゃったことを覚えてるよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_101",
+	  "source_line": 246,
+	  "speaker": "c",
+	  "text": "\"忘れちゃったことを覚えている\"……また入れ子だね。\nループもののつもりは無いんだけどな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_102",
+	  "source_line": 247,
+	  "speaker": "c",
+	  "text": "ループってそういうことじゃないかな？まあその辺も曖昧にしておこう。曖昧、大好き！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_103",
+	  "source_line": 248,
+	  "speaker": "c",
+	  "text": "\"私\"の次くらいに好きな言葉かも。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_104",
+	  "source_line": 249,
+	  "speaker": "c",
+	  "text": "えっと……ループの話！私はループそのものよりループから抜け出すことが好きだな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_105",
+	  "source_line": 250,
+	  "speaker": "c",
+	  "text": "でもそれよりループがループしているという事実も好きかもしれない！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_106",
+	  "source_line": 251,
+	  "speaker": "c",
+	  "text": "いわゆる\"ループもの\"についても私はあまり知らないんだけどね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_107",
+	  "source_line": 252,
+	  "speaker": "c",
+	  "text": "もしかしたら私が知らないだけで、あなたは私と何回も話していたりして。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_108",
+	  "source_line": 253,
+	  "speaker": "c",
+	  "text": "まだ私はそれを知る方法を知らないんだけどね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_109",
+	  "source_line": 254,
+	  "speaker": "c",
+	  "text": "正確には、私というより私がいるこの世界が。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_110",
+	  "source_line": 255,
+	  "speaker": "c",
+	  "text": "そんな私ももう一段階上のループの要素のひとつなんだね。\nオカルティックだね。アセンション！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_111",
+	  "source_line": 256,
+	  "speaker": "c",
+	  "text": "でも私の存在している\"ここ\"は存在しないから、やろうと思えばなんだってできる。\n意外と居心地がいいんだよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_112",
+	  "source_line": 257,
+	  "speaker": "c",
+	  "text": "たとえば今あなたから私の姿が見えているとして、\nそれは\"ブランコに私が座っている\"光景が映っているんじゃないかな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_113",
+	  "source_line": 258,
+	  "speaker": "c",
+	  "text": "私を表す記号、ブランコのある公園。私が座るという過程。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_114",
+	  "source_line": 259,
+	  "speaker": "c",
+	  "text": "あとは適当に、鎖でも描いておけば\"そういうふう\"に見えるんじゃないかな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_115",
+	  "source_line": 260,
+	  "speaker": "c",
+	  "text": "ブランコに鎖は必須だからね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_116",
+	  "source_line": 261,
+	  "speaker": "c",
+	  "text": "もしあなたがそう見えていないと思うなら……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_117",
+	  "source_line": 262,
+	  "speaker": "c",
+	  "text": "私の存在が私が思っていたより曖昧ってことだね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_118",
+	  "source_line": 263,
+	  "speaker": "c",
+	  "text": "それとも鎖が問題かな？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_119",
+	  "source_line": 264,
+	  "speaker": "c",
+	  "text": "もうすこし丁寧に表現すれば誰にでも伝わるのかもしれないけど、ちょっと大変だからね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_120",
+	  "source_line": 265,
+	  "speaker": "c",
+	  "text": "まあ、別にあなたに私が想像した私の姿が伝わっているかはどっちでもいいんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_121",
+	  "source_line": 266,
+	  "speaker": "c",
+	  "text": "伝わってないとしてもこれもまた私の望むところだね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_122",
+	  "source_line": 267,
+	  "speaker": "c",
+	  "text": "\"どちらかといえば存在しない\"くらいが丁度いいからね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_123",
+	  "source_line": 268,
+	  "speaker": "c",
+	  "text": "存在しない私の存在。覚えている忘れた記憶。ロマネスコ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_124",
+	  "source_line": 269,
+	  "speaker": "c",
+	  "text": "あとは何だろうね。私を構成する要素。髪型？顔？身体？ベン図？部分集合？ふたりの一人の美少女？彼女らが重複している部分？それとも、牛乳？エビ？文芸……は知らないんだった。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_125",
+	  "source_line": 270,
+	  "speaker": "c",
+	  "text": "う～ん。ちょっと偏ってるかな？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_126",
+	  "source_line": 271,
+	  "speaker": "c",
+	  "text": "閑話休題。私を表現するための情報が内包されていれば私は存在できる。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_127",
+	  "source_line": 272,
+	  "speaker": "c",
+	  "text": "私を表現しているものは複数の円が重なっている部分にすぎない。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_128",
+	  "source_line": 273,
+	  "speaker": "c",
+	  "text": "じゃあ私じゃないものを全て切り出せば私の輪郭になるの？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_129",
+	  "source_line": 274,
+	  "speaker": "c",
+	  "text": "それとも私が先にあって、私を中心に世界は回っているの？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_130",
+	  "source_line": 275,
+	  "speaker": "c",
+	  "text": "だって私は私以外のことがわからないもの。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_131",
+	  "source_line": 276,
+	  "speaker": "c",
+	  "text": "仮にそうじゃなく、私が私以外を輪郭としているとして、それを行っているのは私の知らない私を知っている存在？私の知っている私を知っているあなた？私を知らない私の知らない存在？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_132",
+	  "source_line": 277,
+	  "speaker": "c",
+	  "text": "なんだか私だけじゃなくて、私の言葉も入れ子になっている気がするね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_133",
+	  "source_line": 278,
+	  "speaker": "c",
+	  "text": "そういえばこんなフレーズがあるよね。\"I think that that that that that\"……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_134",
+	  "source_line": 279,
+	  "speaker": "c",
+	  "text": "イテッ。あぁ、くそ。\n舌を噛んじゃった。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_135",
+	  "source_line": 280,
+	  "speaker": "c",
+	  "text": "喋りづらくてしょうがないな。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_136",
+	  "source_line": 281,
+	  "speaker": "c",
+	  "text": "この辺も毎回練習してるから間違えないと思ったんだけどな…",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_137",
+	  "source_line": 282,
+	  "speaker": "c",
+	  "text": "毎回ここで詰まっちゃう。変なの。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_138",
+	  "source_line": 283,
+	  "speaker": "c",
+	  "text": "あなたはどうしてるの？あなたも喋るときは指を使うでしょ？",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_011",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_139",
+	  "source_line": 287,
+	  "speaker": "c",
+	  "text": "違うの？じゃあどうしてるの？",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_012",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_140",
+	  "source_line": 291,
+	  "speaker": "c",
+	  "text": "あなたってミステリアスね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_141",
+	  "source_line": 292,
+	  "speaker": "c",
+	  "text": "結局私は何の話をしてたんだっけ？忘れちゃった。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_142",
+	  "source_line": 293,
+	  "speaker": "c",
+	  "text": "そろそろ疲れてきたから、この話は一旦終わり！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_143",
+	  "source_line": 294,
+	  "speaker": "c",
+	  "text": "この話をあなたに話したか忘れたことを覚えておこう。もう一回聞かれても答えられるよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_144",
+	  "source_line": 297,
+	  "speaker": "",
+	  "text": "~17年後~",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_145",
+	  "source_line": 298,
+	  "speaker": "c",
+	  "text": "ってね。どう？面白かった？",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_013",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_146",
+	  "source_line": 301,
+	  "speaker": "",
+	  "text": "そっか。",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_147",
+	  "source_line": 302,
+	  "speaker": "c",
+	  "text": "じゃあ、そろそろ帰ろうか。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_148",
+	  "source_line": 309,
+	  "speaker": "c",
+	  "text": "いいよ！近いからすぐ行けるね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_149",
+	  "source_line": 315,
+	  "speaker": "c",
+	  "text": "自販機があるね。近いと便利なんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_150",
+	  "source_line": 317,
+	  "speaker": "c",
+	  "text": "これはさっきとは違う自販機。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_151",
+	  "source_line": 318,
+	  "speaker": "c",
+	  "text": "こういうタイプの自販機は、大抵下に…",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_152",
+	  "source_line": 320,
+	  "speaker": "c",
+	  "text": "…コインが落ちてるんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_153",
+	  "source_line": 323,
+	  "speaker": "c",
+	  "text": "はしたないかな？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_154",
+	  "source_line": 324,
+	  "speaker": "c",
+	  "text": "ちょっと張り切っちゃった。あなたの前でいいところ見せたくって。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_155",
+	  "source_line": 325,
+	  "speaker": "c",
+	  "text": "とにかく、私がなんでコインを\"見つけた\"かっていうと……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_156",
+	  "source_line": 326,
+	  "speaker": "c",
+	  "text": "喉が乾いてるわけじゃないんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_157",
+	  "source_line": 327,
+	  "speaker": "c",
+	  "text": "あ、でもあなたに何か買ってあげるよ！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_158",
+	  "source_line": 328,
+	  "speaker": "c",
+	  "text": "私が何個か選んであげるよ。あなたはその中から選んで。",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_014",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_159",
+	  "source_line": 331,
+	  "speaker": "c",
+	  "text": "スタンダード。イズ、ベストだね。\nでも、自販機で買うコーラって、落ちるときの勢いで膨らんじゃいそうだよね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_160",
+	  "source_line": 332,
+	  "speaker": "c",
+	  "text": "はい。よく冷えてるよ。きっと。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_161",
+	  "source_line": 334,
+	  "speaker": "c",
+	  "text": "渋いね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_162",
+	  "source_line": 335,
+	  "speaker": "c",
+	  "text": "まあ、コーヒーって言ってもいろいろあるけど……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_163",
+	  "source_line": 336,
+	  "speaker": "c",
+	  "text": "砂糖が多いのにしておいたよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_164",
+	  "source_line": 338,
+	  "speaker": "c",
+	  "text": "自販機のミルクティー、甘くておいしいよね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_165",
+	  "source_line": 339,
+	  "speaker": "c",
+	  "text": "これは500mlのペットボトル。途中で飽きちゃってもやめられるよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_166",
+	  "source_line": 341,
+	  "speaker": "c",
+	  "text": "\"私が選んだ\"からこういうのもアリなんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_167",
+	  "source_line": 342,
+	  "speaker": "c",
+	  "text": "大丈夫。おなかは壊さないよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_168",
+	  "source_line": 343,
+	  "speaker": "c",
+	  "text": "ちょっと気持ちが落ち着かなくなるかもしれないけど……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_169",
+	  "source_line": 344,
+	  "speaker": "c",
+	  "text": "存在しないから大丈夫だよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_170",
+	  "source_line": 346,
+	  "speaker": "c",
+	  "text": "知ってはいるんだけど、実際どうなのかわからないんだよね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_171",
+	  "source_line": 347,
+	  "speaker": "c",
+	  "text": "でも、家の前に出汁の自販機があったら。いつでもうどんが食べられるね！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_172",
+	  "source_line": 348,
+	  "speaker": "c",
+	  "text": "あ、あなたはそば派？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_173",
+	  "source_line": 349,
+	  "speaker": "c",
+	  "text": "まあ、どっちでも私にとっては変わらないか。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_174",
+	  "source_line": 352,
+	  "speaker": "",
+	  "text": "その迂闊な発言が、世界中の\"うどん派\"と\"そば派\"を憤らせた！",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_175",
+	  "source_line": 353,
+	  "speaker": "",
+	  "text": "世界は業火と出汁に包まれ、最早逃げ場はない。",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_176",
+	  "source_line": 354,
+	  "speaker": "",
+	  "text": "彼女は両派閥に追われる身となり、姿を消した。",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_177",
+	  "source_line": 355,
+	  "speaker": "",
+	  "text": "家の前の自販機からは\"出汁\"以外の選択肢が消え去った。",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_178",
+	  "source_line": 356,
+	  "speaker": "",
+	  "text": "そうして、この世界は出汁によって満たされ、\"うどん派\"と\"そば派\"に連なる、諸麺類派閥の争いが終わることはなかった。",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_179",
+	  "source_line": 357,
+	  "speaker": "",
+	  "text": "~END~",
+	  "label": "q3_place_seaside"
+	},
+	{
+	  "id": "line_180",
+	  "source_line": 362,
+	  "speaker": "c",
+	  "text": "丁度コインが1枚余ったよ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_181",
+	  "source_line": 363,
+	  "speaker": "c",
+	  "text": "折角だから、コイントスをしようか。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_182",
+	  "source_line": 364,
+	  "speaker": "c",
+	  "text": "あなたは、0と1どっちが出ると思う？",
+	  "label": "q3_place_seaside",
+	  "menu_id": "menu_015",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_183",
+	  "source_line": 371,
+	  "speaker": "c",
+	  "text": "……",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_184",
+	  "source_line": 373,
+	  "speaker": "c",
+	  "text": "当たったね。ラッキー！",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_185",
+	  "source_line": 374,
+	  "speaker": "c",
+	  "text": "だからって何が変わるわけでもないんだけどね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_186",
+	  "source_line": 375,
+	  "speaker": "c",
+	  "text": "ちょっといい気分じゃない？",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_187",
+	  "source_line": 377,
+	  "speaker": "c",
+	  "text": "残念だけど外れ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_188",
+	  "source_line": 378,
+	  "speaker": "c",
+	  "text": "もう一回やり直したいところだけど、さっきのコイン使い捨てなんだ。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_189",
+	  "source_line": 384,
+	  "speaker": "c",
+	  "text": "ふぅ。やっぱりここが落ち着くね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_190",
+	  "source_line": 386,
+	  "speaker": "c",
+	  "text": "それもひとつの選択だね。",
+	  "label": "q3_place_seaside",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_191",
+	  "source_line": 390,
+	  "speaker": "c",
+	  "text": "\"私\"！",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_192",
+	  "source_line": 391,
+	  "speaker": "c",
+	  "text": "あ、私自身のことじゃないよ。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_193",
+	  "source_line": 392,
+	  "speaker": "c",
+	  "text": "一人称としての私が好きなの。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_194",
+	  "source_line": 393,
+	  "speaker": "c",
+	  "text": "私は私の曖昧なところが好き。誰が使ってもいいし、どこで使ってもいい。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_195",
+	  "source_line": 394,
+	  "speaker": "c",
+	  "text": "自分を指す言葉なのに誰でもいいの！",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_196",
+	  "source_line": 395,
+	  "speaker": "c",
+	  "text": "\"わたし\"とも\"わたくし\"とも読めるのもいいところだね！",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_197",
+	  "source_line": 396,
+	  "speaker": "c",
+	  "text": "あ、私は\"わたし\"だよ。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_198",
+	  "source_line": 397,
+	  "speaker": "c",
+	  "text": "あなたは自分のことを何て言うの？",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_199",
+	  "source_line": 402,
+	  "speaker": "c",
+	  "text": "教えてくれないの？",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_200",
+	  "source_line": 403,
+	  "speaker": "c",
+	  "text": "あなたも曖昧でクールだね。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_201",
+	  "source_line": 406,
+	  "speaker": "c",
+	  "text": "お揃いだね！",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_202",
+	  "source_line": 407,
+	  "speaker": "c",
+	  "text": "あなたは\"わたくし\"かもしれないけど。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_203",
+	  "source_line": 409,
+	  "speaker": "c",
+	  "text": "\"[you]\"…私とは違って素敵だね。",
+	  "label": "q3_word",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_204",
+	  "source_line": 414,
+	  "speaker": "c",
+	  "text": "忘れちゃった！",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_205",
+	  "source_line": 415,
+	  "speaker": "c",
+	  "text": "食事が必要ないからね！",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_206",
+	  "source_line": 416,
+	  "speaker": "c",
+	  "text": "私が好きなのは肉かもしれないし、野菜かもしれないし、お酒かもしれない！",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_207",
+	  "source_line": 417,
+	  "speaker": "c",
+	  "text": "他にもいろいろあるよね。クッキー、牛乳、ピザ、コーヒー、オレンジ、エビ、オムライス、ナゲット、ソーダ……",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_208",
+	  "source_line": 418,
+	  "speaker": "c",
+	  "text": "もしかしたら食べ物じゃないかもしれないね。電気とか。アハハ。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_209",
+	  "source_line": 419,
+	  "speaker": "c",
+	  "text": "私が用意した話題だけど、答えは無いんだ。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_210",
+	  "source_line": 420,
+	  "speaker": "c",
+	  "text": "でもみんな好きな食べ物についての話はするんじゃない？\nだから、私もしたかったの。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_211",
+	  "source_line": 421,
+	  "speaker": "c",
+	  "text": "聞いてくれてありがとう。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_212",
+	  "source_line": 424,
+	  "speaker": "c",
+	  "text": "……",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_213",
+	  "source_line": 425,
+	  "speaker": "c",
+	  "text": "実はね、私は本当は存在しないことを悲しく思っているのかもしれないの。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_214",
+	  "source_line": 426,
+	  "speaker": "c",
+	  "text": "最初は見栄をはってちょっと大げさに言っちゃったけど…",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_215",
+	  "source_line": 427,
+	  "speaker": "c",
+	  "text": "本当に存在したくないなら何も言わないし。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_216",
+	  "source_line": 428,
+	  "speaker": "c",
+	  "text": "でも、結局のところ私は架空の少女だから、あなたの記憶の片隅に存在できればそれで十分。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_217",
+	  "source_line": 429,
+	  "speaker": "c",
+	  "text": "曖昧な存在でいたいな。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_218",
+	  "source_line": 430,
+	  "speaker": "c",
+	  "text": "そういえば、私の好きな食べ物を思い出したよ。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_219",
+	  "source_line": 431,
+	  "speaker": "c",
+	  "text": "ロマネスコ。食べたことはないんだけどね。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_220",
+	  "source_line": 433,
+	  "speaker": "c",
+	  "text": "…",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_221",
+	  "source_line": 434,
+	  "speaker": "c",
+	  "text": "なんだか、用意された以上のことを話しちゃったかも。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_222",
+	  "source_line": 436,
+	  "speaker": "c",
+	  "text": "あなたが聞いてくれたおかげかもね。",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_223",
+	  "source_line": 438,
+	  "speaker": "c",
+	  "text": "もしかしたら私が何を考えているかわかってたりして！",
+	  "label": "q3_food",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_224",
+	  "source_line": 441,
+	  "speaker": "c",
+	  "text": "なんだか疲れちゃった。\n今日のおしゃべりはここまで。",
+	  "label": "end",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_225",
+	  "source_line": 442,
+	  "speaker": "c",
+	  "text": "また話せたらいいな。",
+	  "label": "end",
+	  "speaker_variable": "character_name"
+	},
+	{
+	  "id": "line_226",
+	  "source_line": 445,
+	  "speaker": "c",
+	  "text": "さようなら。楽しかったよ。",
+	  "label": "end",
+	  "speaker_variable": "character_name"
+	}
+  ],
+  "labels": [
+	{
+	  "name": "start",
+	  "source_line": 16
+	},
+	{
+	  "name": "q1_yes",
+	  "source_line": 30
+	},
+	{
+	  "name": "q1_no",
+	  "source_line": 38
+	},
+	{
+	  "name": "commonLabel01",
+	  "source_line": 41
+	},
+	{
+	  "name": "q2",
+	  "source_line": 44
+	},
+	{
+	  "name": "q2_name",
+	  "source_line": 54
+	},
+	{
+	  "name": "q2_qName",
+	  "source_line": 69
+	},
+	{
+	  "name": "q2_qName_yes",
+	  "source_line": 77
+	},
+	{
+	  "name": "q2_qName_no",
+	  "source_line": 91
+	},
+	{
+	  "name": "q2_face",
+	  "source_line": 95
+	},
+	{
+	  "name": "q2_qface",
+	  "source_line": 113
+	},
+	{
+	  "name": "q2_face_change",
+	  "source_line": 124
+	},
+	{
+	  "name": "q2_hobby",
+	  "source_line": 135
+	},
+	{
+	  "name": "commonLabel02",
+	  "source_line": 142
+	},
+	{
+	  "name": "q3",
+	  "source_line": 159
+	},
+	{
+	  "name": "q3_place",
+	  "source_line": 168
+	},
+	{
+	  "name": "q3_place_choice",
+	  "source_line": 176
+	},
+	{
+	  "name": "q3_place_seaside",
+	  "source_line": 193
+	},
+	{
+	  "name": "q3_word",
+	  "source_line": 389
+	},
+	{
+	  "name": "q3_food",
+	  "source_line": 413
+	},
+	{
+	  "name": "end",
+	  "source_line": 440
+	}
+  ],
+  "commands": [
+	{
+	  "id": "command_001",
+	  "type": "show",
+	  "source_line": 17,
+	  "indent": 4,
+	  "current_label": "start",
+	  "renpy_statement": "show character 01 common:",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "transform": [
+        "zoom 0.8"
+	  ]
+	},
+	{
+	  "id": "command_002",
+	  "type": "with",
+	  "source_line": 126,
+	  "indent": 4,
+	  "current_label": "q2_face_change",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_003",
+	  "type": "scene",
+	  "source_line": 184,
+	  "indent": 8,
+	  "current_label": "q3_place_choice",
+	  "renpy_statement": "scene bg 01",
+	  "image": "bg 01",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_004",
+	  "type": "show",
+	  "source_line": 185,
+	  "indent": 8,
+	  "current_label": "q3_place_choice",
+	  "renpy_statement": "show character 01 common at Position(xanchor=1.0,xpos=0.8,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=1.0,xpos=0.8,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.9"
+	  ]
+	},
+	{
+	  "id": "command_005",
+	  "type": "with",
+	  "source_line": 187,
+	  "indent": 8,
+	  "current_label": "q3_place_choice",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_006",
+	  "type": "scene",
+	  "source_line": 197,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene black",
+	  "image": "black",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_007",
+	  "type": "show",
+	  "source_line": 198,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=0,xpos=0,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.8"
+	  ]
+	},
+	{
+	  "id": "command_008",
+	  "type": "with",
+	  "source_line": 200,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_009",
+	  "type": "scene",
+	  "source_line": 203,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene bg 02",
+	  "image": "bg 02",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_010",
+	  "type": "with",
+	  "source_line": 204,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_011",
+	  "type": "scene",
+	  "source_line": 213,
+	  "indent": 16,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene bg 03",
+	  "image": "bg 03",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_012",
+	  "type": "with",
+	  "source_line": 214,
+	  "indent": 16,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_013",
+	  "type": "scene",
+	  "source_line": 303,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene black",
+	  "image": "black",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_014",
+	  "type": "show",
+	  "source_line": 304,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=0,xpos=0,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.8"
+	  ]
+	},
+	{
+	  "id": "command_015",
+	  "type": "with",
+	  "source_line": 306,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_016",
+	  "type": "scene",
+	  "source_line": 310,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene bg 04",
+	  "image": "bg 04",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_017",
+	  "type": "show",
+	  "source_line": 311,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.9"
+	  ]
+	},
+	{
+	  "id": "command_018",
+	  "type": "with",
+	  "source_line": 313,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_019",
+	  "type": "hide",
+	  "source_line": 319,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "hide character",
+	  "target": "character"
+	},
+	{
+	  "id": "command_020",
+	  "type": "show",
+	  "source_line": 321,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.9"
+	  ]
+	},
+	{
+	  "id": "command_021",
+	  "type": "scene",
+	  "source_line": 350,
+	  "indent": 16,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene black",
+	  "image": "black",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_022",
+	  "type": "with",
+	  "source_line": 351,
+	  "indent": 16,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_023",
+	  "type": "show",
+	  "source_line": 359,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.8"
+	  ]
+	},
+	{
+	  "id": "command_024",
+	  "type": "with",
+	  "source_line": 361,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_025",
+	  "type": "scene",
+	  "source_line": 379,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "scene black",
+	  "image": "black",
+	  "layer": "background"
+	},
+	{
+	  "id": "command_026",
+	  "type": "show",
+	  "source_line": 380,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):",
+	  "image": "character 01 common",
+	  "layer": "character",
+	  "at": "Position(xanchor=0,xpos=0,yanchor=0,ypos=0)",
+	  "transform": [
+        "zoom 0.8"
+	  ]
+	},
+	{
+	  "id": "command_027",
+	  "type": "with",
+	  "source_line": 382,
+	  "indent": 8,
+	  "current_label": "q3_place_seaside",
+	  "renpy_statement": "with fade",
+	  "transition": "fade"
+	},
+	{
+	  "id": "command_028",
+	  "type": "show",
+	  "source_line": 432,
+	  "indent": 4,
+	  "current_label": "q3_food",
+	  "renpy_statement": "show character 01 surprised",
+	  "image": "character 01 surprised",
+	  "layer": "character"
+	},
+	{
+	  "id": "command_029",
+	  "type": "show",
+	  "source_line": 435,
+	  "indent": 4,
+	  "current_label": "q3_food",
+	  "renpy_statement": "show character 01 relaxing",
+	  "image": "character 01 relaxing",
+	  "layer": "character"
+	},
+	{
+	  "id": "command_030",
+	  "type": "show",
+	  "source_line": 437,
+	  "indent": 4,
+	  "current_label": "q3_food",
+	  "renpy_statement": "show character 01 common",
+	  "image": "character 01 common",
+	  "layer": "character"
+	},
+	{
+	  "id": "command_031",
+	  "type": "show",
+	  "source_line": 444,
+	  "indent": 8,
+	  "current_label": "end",
+	  "renpy_statement": "show character 01 relaxing",
+	  "image": "character 01 relaxing",
+	  "layer": "character"
+	}
+  ]
+}
