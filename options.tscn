@@ -219,14 +219,12 @@ layout_mode = 2
 
 [node name="ToTitleButton" type="Button" parent="Frame/Margin/Tabs/ゲーム終了/VBoxContainer" unique_id=2016916515]
 layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/hover = ExtResource("3_button_hover")
 text = "タイトルに戻る"
 
 [node name="QuitButton" type="Button" parent="Frame/Margin/Tabs/ゲーム終了/VBoxContainer" unique_id=734369011]
 layout_mode = 2
-size_flags_horizontal = 4
 theme_override_styles/hover = ExtResource("3_button_hover")
 text = "ゲームを終了する"
 

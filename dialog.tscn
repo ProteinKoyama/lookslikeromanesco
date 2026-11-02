@@ -39,7 +39,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_script")
-external_story_mode = true
 
 [node name="ChoiceScrollContainer" type="ScrollContainer" parent="." unique_id=1864057550]
 visible = false

@@ -1,20 +1,16 @@
 extends Control
 
-## Assets/renpy_dialogues.json の台詞を順に表示するノベルゲーム用の会話コンポーネントです。
+## Ren'Py スクリプトから受け取った台詞と選択肢を表示する会話コンポーネントです。
 
-signal dialogue_finished
 signal choice_selected(choice_index: int, choice: Dictionary)
 signal advance_requested
 signal options_toggle_requested
 signal text_input_submitted(value: String)
 
-@export var external_story_mode := false
-
-const DIALOGUE_FILE_PATH := "res://Assets/renpy_dialogues.json"
 const SKIP_CHARACTERS_PER_SECOND := 300.0
 const SKIP_LINE_DELAY_SECONDS := 0.05
 const DEFAULT_NAME_INPUT_LENGTH := 10
-const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{1,10}$"
+const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{0,10}$"
 
 @onready var speaker_label: Label = $DialoguePanel/Margin/Layout/SpeakerName
 @onready var dialogue_label: Label = $DialoguePanel/Margin/Layout/DialogueText
@@ -30,11 +26,9 @@ const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{1,10}$"
 @onready var text_input_validation_label: Label = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/ValidationLabel
 
 var options_menu: Control
-var dialogue_entries: Array[Dictionary] = []
 var choice_entries: Array[Dictionary] = []
 var choice_buttons: Array[Button] = []
 var _pending_story_choices: Array = []
-var current_dialogue_index := 0
 var is_typing := false
 var typing_generation := 0
 var auto_generation := 0
@@ -46,9 +40,6 @@ func _ready() -> void:
 	setting_button.pressed.connect(_on_setting_button_pressed)
 	text_input_submit_button.pressed.connect(_submit_text_input)
 	name_line_edit.text_submitted.connect(_on_name_line_edit_text_submitted)
-	if not external_story_mode:
-		start_dialogue()
-
 	# Main の静的 Options ノードを取得し、可視状態をボタン表示へ反映します。
 	var main_node := get_tree().current_scene
 	if main_node != null:
@@ -66,21 +57,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_advance_input(event):
 		if is_typing:
 			_finish_typing()
-		elif external_story_mode:
-			# Signal は Godot のノード間通知機能です。JSON の進行制御へ次の行を要求します。
-			advance_requested.emit()
 		else:
-			advance_dialogue()
-
-
-func start_dialogue(file_path: String = DIALOGUE_FILE_PATH) -> void:
-	hide_choices()
-	if not _load_dialogue_entries(file_path):
-		hide()
-		return
-
-	current_dialogue_index = 0
-	_show_current_dialogue()
+			# Signal は Godot のノード間通知機能です。Ren'Py の進行制御へ次の行を要求します。
+			advance_requested.emit()
 
 
 func show_choices(choices: Array) -> void:
@@ -119,14 +98,20 @@ func show_choices(choices: Array) -> void:
 
 
 func present_story_text(speaker: String, text: String, choices: Array = []) -> void:
-	if not external_story_mode:
-		push_error("present_story_text は external_story_mode の Dialog で使用してください。")
-		return
-
 	hide_choices()
 	speaker_label.text = speaker
 	_pending_story_choices = choices.duplicate(true)
 	_start_typing(text)
+	show()
+
+
+func present_menu(prompt: String, choices: Array) -> void:
+	# Ren'Py の menu prompt は選択肢と同時に表示されるため、入力待ちの開始と同時に選択肢を出します。
+	hide_choices()
+	speaker_label.text = ""
+	_pending_story_choices.clear()
+	_start_typing(prompt)
+	show_choices(choices)
 	show()
 
 
@@ -152,7 +137,7 @@ func show_text_input(prompt: String, max_length: int = DEFAULT_NAME_INPUT_LENGTH
 
 
 func show_text_input_error() -> void:
-	text_input_validation_label.text = "1〜%d文字で入力してください。日本語・英数字・空白・_・-・ー・中点のみ使用できます。" % name_line_edit.max_length
+	text_input_validation_label.text = "0〜%d文字で入力してください。日本語・英数字・空白・_・-・ー・中点のみ使用できます。" % name_line_edit.max_length
 	text_input_validation_label.show()
 	name_line_edit.grab_focus()
 
@@ -171,7 +156,7 @@ func _on_name_line_edit_text_submitted(_submitted_text: String) -> void:
 
 
 func _is_safe_name(value: String, max_length: int) -> bool:
-	if value.is_empty() or value.length() > max_length:
+	if value.length() > max_length:
 		return false
 
 	# RegEx は Godot 組み込み API です。表示や式解釈に危険な記号を許可せず、Unicode の名前文字だけを受け付けます。
@@ -204,82 +189,6 @@ func _on_choice_button_pressed(choice_index: int) -> void:
 	hide_choices()
 	# Signal は Godot のノード間通知機能です。選択結果を進行制御側へ返します。
 	choice_selected.emit(choice_index, selected_choice)
-
-
-func advance_dialogue() -> void:
-	if dialogue_entries.is_empty() or not visible or choice_scroll_container.visible:
-		return
-
-	current_dialogue_index += 1
-	if current_dialogue_index >= dialogue_entries.size():
-		hide()
-		# signal は Godot のノード間通知機能です。Main 側で終了後の処理を接続できます。
-		dialogue_finished.emit()
-		return
-
-	_show_current_dialogue()
-
-
-func _load_dialogue_entries(file_path: String) -> bool:
-	# FileAccess と JSON は Godot の組み込み API です。各段階を分けて検証し、
-	# 不正なデータを画面表示処理へ渡さないようにします。
-	var file := FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
-		push_error("会話 JSON を開けません: %s" % file_path)
-		return false
-
-	var json := JSON.new()
-	var parse_result: Error = json.parse(file.get_as_text())
-	if parse_result != OK:
-		push_error("会話 JSON の解析に失敗しました: %s" % json.get_error_message())
-		return false
-
-	var parsed_data: Variant = json.data
-	if not parsed_data is Dictionary:
-		push_error("会話 JSON のルートは Dictionary である必要があります。")
-		return false
-
-	var dialogue_data: Dictionary = parsed_data
-	var entries_value: Variant = dialogue_data.get("dialogues")
-	if not entries_value is Array:
-		push_error("会話 JSON の dialogues は Array である必要があります。")
-		return false
-
-	var validated_entries: Array[Dictionary] = []
-	for entry_value: Variant in entries_value:
-		if not _is_valid_dialogue_entry(entry_value):
-			push_error("会話データには speaker と text が必要です。")
-			return false
-
-		var entry: Dictionary = entry_value
-		validated_entries.append(entry)
-
-	if validated_entries.is_empty():
-		push_error("表示できる会話データがありません: %s" % file_path)
-		return false
-
-	dialogue_entries = validated_entries
-	return true
-
-
-func _is_valid_dialogue_entry(entry_value: Variant) -> bool:
-	if not entry_value is Dictionary:
-		return false
-
-	var entry: Dictionary = entry_value
-	# Dictionary の値は Variant なので、表示前に文字列型かを確認します。
-	var speaker_value: Variant = entry.get("speaker")
-	var has_valid_speaker := speaker_value is String or speaker_value == null
-	return has_valid_speaker and entry.get("text") is String
-
-
-func _show_current_dialogue() -> void:
-	hide_choices()
-	var entry := dialogue_entries[current_dialogue_index]
-	var speaker_value: Variant = entry.get("speaker")
-	speaker_label.text = str(speaker_value) if speaker_value is String else ""
-	_start_typing(str(entry["text"]))
-	show()
 
 
 func _start_typing(text: String) -> void:
@@ -340,10 +249,7 @@ func _continue_while_skipping(completed_generation: int) -> void:
 	if choice_scroll_container.visible or not visible or is_typing:
 		return
 
-	if external_story_mode:
-		advance_requested.emit()
-	else:
-		advance_dialogue()
+	advance_requested.emit()
 
 
 func _continue_while_auto(completed_generation: int) -> void:
@@ -371,10 +277,7 @@ func _continue_while_auto(completed_generation: int) -> void:
 
 
 func _advance_to_next_text() -> void:
-	if external_story_mode:
-		advance_requested.emit()
-	else:
-		advance_dialogue()
+	advance_requested.emit()
 
 
 func _on_auto_button_toggled(is_enabled: bool) -> void:
@@ -407,19 +310,9 @@ func _sync_setting_button_state() -> void:
 
 
 func _show_current_dialogue_choices() -> void:
-	if external_story_mode:
-		if not _pending_story_choices.is_empty():
-			show_choices(_pending_story_choices)
-			_pending_story_choices.clear()
-		return
-
-	if current_dialogue_index < 0 or current_dialogue_index >= dialogue_entries.size():
-		return
-
-	var entry: Dictionary = dialogue_entries[current_dialogue_index]
-	var choices_value: Variant = entry.get("choices")
-	if choices_value is Array:
-		show_choices(choices_value)
+	if not _pending_story_choices.is_empty():
+		show_choices(_pending_story_choices)
+		_pending_story_choices.clear()
 
 
 func _is_advance_input(event: InputEvent) -> bool:

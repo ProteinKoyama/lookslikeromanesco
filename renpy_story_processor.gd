@@ -1,678 +1,868 @@
 class_name RenpyStoryProcessor
 extends Node
 
-## Ren'Py 由来の JSON を読み込み、ゲーム側が扱いやすいイベント辞書へ変換します。
-## 表示・入力・Ren'Py の条件式評価は、このノードを利用するゲーム側が担当します。
+## script.rpy を読み込み、対応する Ren'Py 文を順に実行して Dialog へ渡します。
 
 signal event_ready(event: Dictionary)
 signal story_finished
 
-const STORY_JSON_PATH := "res://Assets/renpy_dialogues.json"
-const STORY_FORMAT_VERSION := 3
-const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{1,10}$"
+const STORY_FILE_PATH := "res://Assets/script.rpy"
+const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{0,10}$"
 
-var _flow: Array[Dictionary] = []
-var _dialogues_by_id: Dictionary = {}
-var _commands_by_id: Dictionary = {}
+var _tokens: Array[Dictionary] = []
+var _parse_index := 0
+var _parse_error := ""
+var _program: Array[Dictionary] = []
+var _program_counter := 0
+var _label_program_indices: Dictionary = {}
+var _default_variables: Dictionary = {}
+var _defined_variables: Dictionary = {}
 var _story_variables: Dictionary = {}
-var _label_flow_indices: Dictionary = {}
-var _menu_flow_indices: Dictionary = {}
-var _flow_index_by_dialogue_id: Dictionary = {}
-var _branch_boundaries: Array[Dictionary] = []
-var _conditional_boundaries: Array[Dictionary] = []
-var _flow_index := 0
-var _pending_menu_flow_index := -1
+var _pending_choice_targets: Array[int] = []
+var _pending_input_variable := ""
 var _waiting_for_response := false
+var _call_stack: Array[int] = []
+var _random := RandomNumberGenerator.new()
 
 
-# 公開 API: シナリオの読込と進行
-func load_story(file_path: String = STORY_JSON_PATH) -> bool:
-	# FileAccess と JSON は Godot の組み込み API です。読込・解析・構造確認を分けます。
-	_clear_loaded_story()
+func load_story(file_path: String = STORY_FILE_PATH) -> bool:
+	# FileAccess は Godot の組み込み API で、プロジェクト内の script.rpy を読み込みます。
 	var file := FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
-		push_error("シナリオ JSON を開けません: %s" % file_path)
+		push_error("Ren'Py シナリオを開けません: %s" % file_path)
 		return false
 
-	var json := JSON.new()
-	var parse_error: Error = json.parse(file.get_as_text())
-	if parse_error != OK:
-		push_error("シナリオ JSON の解析に失敗しました: %s" % json.get_error_message())
+	_tokens.clear()
+	_parse_index = 0
+	_parse_error = ""
+	if not _tokenize_source(file.get_as_text().trim_prefix("\uFEFF")):
 		return false
 
-	var parsed_data: Variant = json.data
-	if not parsed_data is Dictionary:
-		push_error("シナリオ JSON のルートは Dictionary である必要があります。")
+	var root_nodes := _parse_block(0)
+	if not _parse_error.is_empty():
+		push_error(_parse_error)
+		return false
+	if _parse_index < _tokens.size():
+		var unexpected: Dictionary = _tokens[_parse_index]
+		push_error("未対応のインデントです (%d行): %s" % [unexpected.line, unexpected.text])
 		return false
 
-	var story_data: Dictionary = parsed_data
-	if not _load_records(story_data):
-		_clear_loaded_story()
+	_default_variables.clear()
+	_defined_variables.clear()
+	_program.clear()
+	_label_program_indices.clear()
+	_collect_declarations(root_nodes)
+	_compile_nodes(root_nodes)
+	if not _parse_error.is_empty():
+		push_error(_parse_error)
 		return false
-
-	_build_indices()
+	if not _label_program_indices.has("start"):
+		push_error("script.rpy に label start がありません。")
+		return false
 	return true
 
 
 func start_story() -> void:
-	if _flow.is_empty():
-		push_error("シナリオが読み込まれていないか、flow が空です。")
+	if _program.is_empty():
+		push_error("Ren'Py シナリオが読み込まれていません。")
 		return
 
-	_reset_runtime_state()
-	_flow_index = 0
-	_dispatch_next_event()
+	_story_variables = _default_variables.duplicate(true)
+	_story_variables.merge(_defined_variables, true)
+	_pending_choice_targets.clear()
+	_pending_input_variable = ""
+	_call_stack.clear()
+	_waiting_for_response = false
+	# RandomNumberGenerator は Godot API です。Ren'Py の random.choice/randint に使います。
+	_random.randomize()
+	_program_counter = int(_label_program_indices["start"])
+	_run_until_event()
 
 
 func continue_story() -> void:
-	if not _waiting_for_response or _pending_menu_flow_index >= 0:
+	if not _waiting_for_response:
 		return
 
 	_waiting_for_response = false
-	_flow_index += 1
-	_dispatch_next_event()
+	_run_until_event()
 
 
 func select_choice(choice_index: int) -> void:
-	if not _waiting_for_response or _pending_menu_flow_index < 0:
+	if not _waiting_for_response:
 		return
-
-	var menu_event: Dictionary = _flow[_pending_menu_flow_index]
-	var menu_id := str(menu_event.get("id", ""))
-	var choices := _get_menu_choices(menu_id)
-	if choice_index < 0 or choice_index >= choices.size():
+	if choice_index < 0 or choice_index >= _pending_choice_targets.size():
 		push_error("選択肢の番号が範囲外です: %d" % choice_index)
 		return
 
-	var choice_value: Variant = choices[choice_index]
-	if not choice_value is Dictionary:
-		push_error("選択肢データが Dictionary ではありません: %s" % menu_id)
-		return
-
-	var choice: Dictionary = choice_value
-	_apply_assignments(choice.get("assignments", []))
-	var next_flow_index := _pending_menu_flow_index + 1
-	var destination: Dictionary = choice.get("destination", {})
+	_program_counter = _pending_choice_targets[choice_index]
+	_pending_choice_targets.clear()
 	_waiting_for_response = false
-	_pending_menu_flow_index = -1
-	_register_branch_boundary(destination)
-	_flow_index = _get_choice_destination(choice, next_flow_index)
-	_prune_conditional_boundaries_for_line(_get_flow_source_line(_flow_index))
-	_prune_branch_boundaries_for_line(_get_flow_source_line(_flow_index))
-	_dispatch_next_event()
+	_run_until_event()
 
 
 func submit_text_input(value: String) -> bool:
-	if not _waiting_for_response or _flow_index >= _flow.size():
+	if not _waiting_for_response or _pending_input_variable.is_empty():
 		return false
 
-	var input_event: Dictionary = _flow[_flow_index]
-	if str(input_event.get("type", "")) != "text_input":
-		return false
-
-	var max_length := clampi(int(input_event.get("max_length", 10)), 1, 10)
 	var accepted_value := value.strip_edges()
-	if not _is_safe_story_name(accepted_value, max_length):
+	if not _is_safe_input(accepted_value):
 		return false
 
-	var variable_name := str(input_event.get("variable", ""))
-	if variable_name.is_empty():
-		push_error("テキスト入力イベントに variable がありません。")
-		return false
-
-	_story_variables[variable_name] = accepted_value
+	_story_variables[_pending_input_variable] = accepted_value
+	_pending_input_variable = ""
 	_waiting_for_response = false
-	_flow_index += 1
-	_dispatch_next_event()
+	_run_until_event()
 	return true
 
 
-func jump_to_label(label_name: String) -> void:
-	if not _label_flow_indices.has(label_name):
-		push_error("移動先のラベルが見つかりません: %s" % label_name)
-		return
-
-	_waiting_for_response = false
-	_pending_menu_flow_index = -1
-	var label_index := int(_label_flow_indices[label_name])
-	_flow_index = label_index + 1
-	_prune_conditional_boundaries_for_line(int(_flow[label_index].get("source_line", 0)))
-	_prune_branch_boundaries_for_line(int(_flow[label_index].get("source_line", 0)))
-	_dispatch_next_event()
-
-
-func get_flow_size() -> int:
-	return _flow.size()
-
-
-func set_story_variable(variable_name: String, value: Variant) -> void:
-	# 外部の入力UIも同じシナリオ変数へ値を渡せるようにします。
-	_story_variables[variable_name] = value
-
-
-# データ読込: JSON の形式を確認し、実行用インデックスを作成
-func _load_records(story_data: Dictionary) -> bool:
-	var format_version := int(story_data.get("format_version", 0))
-	if format_version != STORY_FORMAT_VERSION:
-		push_error(
-			"シナリオ JSON の format_version が対応していません: %d (期待値: %d)"
-			% [format_version, STORY_FORMAT_VERSION]
-		)
-		return false
-
-	var flow_value: Variant = story_data.get("flow")
-	if not flow_value is Array:
-		push_error("シナリオ JSON に flow 配列がありません。")
-		return false
-
-	_flow.clear()
-	for flow_entry_value: Variant in flow_value:
-		if not flow_entry_value is Dictionary:
-			push_error("flow の各要素は Dictionary である必要があります。")
-			return false
-
-		var flow_entry: Dictionary = flow_entry_value
-		_flow.append(flow_entry)
-
-	for index in range(1, _flow.size()):
-		var previous_line := int(_flow[index - 1].get("source_line", 0))
-		var current_line := int(_flow[index].get("source_line", 0))
-		if current_line < previous_line:
-			push_error("flow は source_line の昇順である必要があります。")
-			return false
-
-	if not _load_indexed_records(story_data, "dialogues", "id", _dialogues_by_id):
-		return false
-	if not _load_indexed_records(story_data, "commands", "id", _commands_by_id):
-		return false
-	if not _load_story_variables(story_data):
-		return false
-
-	return true
-
-
-func _clear_loaded_story() -> void:
-	_flow.clear()
-	_dialogues_by_id.clear()
-	_commands_by_id.clear()
-	_story_variables.clear()
-	_label_flow_indices.clear()
-	_menu_flow_indices.clear()
-	_flow_index_by_dialogue_id.clear()
-	_reset_runtime_state()
-
-
-func _reset_runtime_state() -> void:
-	_flow_index = 0
-	_pending_menu_flow_index = -1
-	_waiting_for_response = false
-	_branch_boundaries.clear()
-	_conditional_boundaries.clear()
-
-
-func _load_story_variables(story_data: Dictionary) -> bool:
-	var variables_value: Variant = story_data.get("variables", {})
-	if not variables_value is Dictionary:
-		push_error("シナリオ JSON の variables は Dictionary である必要があります。")
-		return false
-
-	var story_variables: Dictionary = variables_value
-	_story_variables = story_variables.duplicate(true)
-	return true
-
-
-func _load_indexed_records(
-	story_data: Dictionary,
-	array_key: String,
-	index_key: String,
-	index: Dictionary
-) -> bool:
-	var records_value: Variant = story_data.get(array_key)
-	if not records_value is Array:
-		push_error("シナリオ JSON に %s 配列がありません。" % array_key)
-		return false
-
-	index.clear()
-	var records: Array = records_value
-	for record_value: Variant in records:
-		if not record_value is Dictionary:
-			push_error("%s の各要素は Dictionary である必要があります。" % array_key)
-			return false
-
-		var record: Dictionary = record_value
-		var record_id := str(record.get(index_key, ""))
-		if record_id.is_empty():
-			push_error("%s に %s がありません。" % [array_key, index_key])
-			return false
-		index[record_id] = record
-
-	return true
-
-
-func _build_indices() -> void:
-	_label_flow_indices.clear()
-	_menu_flow_indices.clear()
-	_flow_index_by_dialogue_id.clear()
-
-	for index in range(_flow.size()):
-		var flow_entry: Dictionary = _flow[index]
-		var event_type := str(flow_entry.get("type", ""))
-		if event_type == "label":
-			_label_flow_indices[str(flow_entry.get("name", ""))] = index
-		elif event_type == "menu":
-			_menu_flow_indices[str(flow_entry.get("id", ""))] = index
-		elif event_type == "dialogue":
-			_flow_index_by_dialogue_id[str(flow_entry.get("id", ""))] = index
-
-
-# 進行制御: 次に表示するイベントを選択
-func _dispatch_next_event() -> void:
-	while _flow_index < _flow.size():
-		if _skip_completed_branch():
-			continue
-		if _skip_completed_conditional_branch():
+# 字句解析: インデントと行番号を残し、コメントと空行を除きます。
+func _tokenize_source(source: String) -> bool:
+	var source_lines := source.split("\n")
+	for line_index in range(source_lines.size()):
+		var raw_line: String = source_lines[line_index].trim_suffix("\r")
+		if raw_line.strip_edges().is_empty() or raw_line.strip_edges().begins_with("#"):
 			continue
 
-		var flow_entry: Dictionary = _flow[_flow_index]
-		var event_type := str(flow_entry.get("type", ""))
+		var indentation := 0
+		for character in raw_line:
+			if character == " ":
+				indentation += 1
+			elif character == "\t":
+				indentation += 4
+			else:
+				break
 
-		if event_type == "label":
-			_flow_index += 1
+		_tokens.append({
+			"line": line_index + 1,
+			"indent": indentation,
+			"text": raw_line.strip_edges()
+		})
+	return true
+
+
+func _parse_block(expected_indent: int) -> Array[Dictionary]:
+	var statements: Array[Dictionary] = []
+	while _parse_index < _tokens.size():
+		var token: Dictionary = _tokens[_parse_index]
+		var indentation := int(token.indent)
+		if indentation < expected_indent:
+			break
+		if indentation > expected_indent:
+			_parse_error = "予期しないインデント (%d行): %s" % [token.line, token.text]
+			break
+		if _is_if_branch_header(str(token.text)):
+			break
+
+		var statement := _parse_statement(expected_indent)
+		if not _parse_error.is_empty():
+			break
+		if not statement.is_empty():
+			statements.append(statement)
+
+	return statements
+
+
+func _parse_statement(indentation: int) -> Dictionary:
+	var token: Dictionary = _tokens[_parse_index]
+	var source_line := int(token.line)
+	var text := str(token.text)
+
+	if text.begins_with("label ") and text.ends_with(":"):
+		var label_name := text.trim_prefix("label ").trim_suffix(":").strip_edges()
+		_parse_index += 1
+		return {
+			"type": "label",
+			"name": label_name,
+			"line": source_line,
+			"body": _parse_block(indentation + 4)
+		}
+
+	if text.begins_with("menu") and text.ends_with(":"):
+		return _parse_menu(indentation, source_line)
+
+	if _is_if_header(text):
+		return _parse_if(indentation)
+
+	if text == "python:":
+		return _parse_python_block(indentation, source_line)
+
+	if text.begins_with("default "):
+		_parse_index += 1
+		var default_assignment := _parse_assignment(text.trim_prefix("default "), source_line)
+		default_assignment["type"] = "default"
+		return default_assignment
+
+	if text.begins_with("define "):
+		_parse_index += 1
+		var definition := _parse_assignment(text.trim_prefix("define "), source_line)
+		definition["type"] = "define"
+		return definition
+
+	if text.begins_with("jump "):
+		_parse_index += 1
+		return {"type": "jump", "target": text.trim_prefix("jump ").strip_edges(), "line": source_line}
+
+	if text.begins_with("call "):
+		_parse_index += 1
+		return {"type": "call", "target": text.trim_prefix("call ").strip_edges(), "line": source_line}
+
+	if text == "return":
+		_parse_index += 1
+		return {"type": "return", "line": source_line}
+
+	if text == "pass":
+		_parse_index += 1
+		return {"type": "noop", "line": source_line}
+
+	if text.begins_with("$"):
+		_parse_index += 1
+		return _parse_assignment(text.trim_prefix("$").strip_edges(), source_line)
+
+	if text.begins_with("scene ") or text.begins_with("show ") or text.begins_with("hide ") or text.begins_with("with "):
+		_parse_index += 1
+		var command := text
+		var transform_nodes: Array[Dictionary] = []
+		if command.ends_with(":"):
+			command = command.trim_suffix(":")
+			transform_nodes = _parse_block(indentation + 4)
+		return {
+			"type": "visual",
+			"command": command,
+			"transform": transform_nodes,
+			"line": source_line
+		}
+
+	if text.begins_with("zoom "):
+		_parse_index += 1
+		return {
+			"type": "transform",
+			"zoom": text.trim_prefix("zoom ").to_float(),
+			"line": source_line
+		}
+
+	var dialogue := _parse_dialogue(text, source_line)
+	if not dialogue.is_empty():
+		_parse_index += 1
+		return dialogue
+
+	var assignment := _parse_assignment(text, source_line)
+	if not assignment.is_empty():
+		_parse_index += 1
+		return assignment
+
+	_parse_error = "未対応の Ren'Py 文です (%d行): %s" % [source_line, text]
+	_parse_index += 1
+	return {}
+
+
+func _parse_python_block(indentation: int, source_line: int) -> Dictionary:
+	_parse_index += 1
+	var body: Array[Dictionary] = []
+	var block_indent := indentation + 4
+	while _parse_index < _tokens.size():
+		var token: Dictionary = _tokens[_parse_index]
+		if int(token.indent) < block_indent:
+			break
+		if int(token.indent) > block_indent:
+			_parse_error = "未対応の Python インデント (%d行): %s" % [token.line, token.text]
+			break
+
+		var python_line := str(token.text)
+		if _is_if_header(python_line):
+			body.append(_parse_if(block_indent))
+			continue
+		var assignment := _parse_assignment(python_line, int(token.line))
+		if assignment.is_empty():
+			_parse_error = "未対応の Python 文です (%d行): %s" % [token.line, python_line]
+			_parse_index += 1
+			break
+		body.append(assignment)
+		_parse_index += 1
+	return {"type": "python_block", "body": body, "line": source_line}
+
+
+func _parse_if(indentation: int) -> Dictionary:
+	var branches: Array[Dictionary] = []
+	var source_line := int(_tokens[_parse_index].line)
+	while _parse_index < _tokens.size():
+		var token: Dictionary = _tokens[_parse_index]
+		var text := str(token.text)
+		var is_first_branch := branches.is_empty()
+		var is_valid_header := _is_if_header(text) if is_first_branch else _is_if_branch_header(text)
+		if int(token.indent) != indentation or not is_valid_header:
+			break
+
+		var expression := ""
+		var is_else := text.begins_with("else")
+		if _is_if_header(text):
+			expression = _header_expression(text, "if")
+		elif text.begins_with("elif "):
+			expression = _header_expression(text, "elif")
+		_parse_index += 1
+		branches.append({
+			"expression": expression,
+			"otherwise": is_else,
+			"body": _parse_block(indentation + 4)
+		})
+		if _parse_index >= _tokens.size():
+			break
+		var next_token: Dictionary = _tokens[_parse_index]
+		if int(next_token.indent) != indentation or not _is_if_branch_header(str(next_token.text)):
+			break
+
+	return {"type": "if", "branches": branches, "line": source_line}
+
+
+func _parse_menu(indentation: int, source_line: int) -> Dictionary:
+	_parse_index += 1
+	var menu_prompt := ""
+	var choices: Array[Dictionary] = []
+	var block_indent := indentation + 4
+
+	while _parse_index < _tokens.size():
+		var token: Dictionary = _tokens[_parse_index]
+		if int(token.indent) < block_indent:
+			break
+		if int(token.indent) > block_indent:
+			_parse_error = "予期しない menu インデント (%d行): %s" % [token.line, token.text]
+			break
+
+		var choice_header := _parse_menu_choice_header(str(token.text))
+		if not choice_header.is_empty():
+			_parse_index += 1
+			choices.append({
+				"text": choice_header.text,
+				"condition": choice_header.condition,
+				"body": _parse_block(block_indent + 4),
+				"line": token.line
+			})
 			continue
 
-		if event_type == "jump":
-			var target_label := str(flow_entry.get("target_label", ""))
-			if not _label_flow_indices.has(target_label):
-				push_error("jump の移動先ラベルが見つかりません: %s" % target_label)
+		var prompt := _parse_dialogue(str(token.text), int(token.line))
+		if prompt.is_empty() and str(token.text).begins_with("\""):
+			var quoted := _read_quoted_value(str(token.text), 0)
+			if not quoted.is_empty() and str(token.text).substr(int(quoted.end)).strip_edges().is_empty():
+				prompt = {"type": "dialogue", "speaker": "", "text": quoted.value, "line": token.line}
+		if not prompt.is_empty():
+			menu_prompt = str(prompt.text)
+			_parse_index += 1
+			continue
+
+		_parse_error = "未対応の menu 文です (%d行): %s" % [token.line, token.text]
+		_parse_index += 1
+		break
+
+	if choices.is_empty() and _parse_error.is_empty():
+		_parse_error = "menu に選択肢がありません (%d行)。" % source_line
+	return {
+		"type": "menu",
+		"prompt": menu_prompt,
+		"choices": choices,
+		"line": source_line
+	}
+
+
+func _parse_dialogue(text: String, source_line: int) -> Dictionary:
+	if text.begins_with("\""):
+		var narration := _read_quoted_value(text, 0)
+		if not narration.is_empty() and text.substr(int(narration.end)).strip_edges().is_empty():
+			return {"type": "dialogue", "speaker": "", "text": narration.value, "line": source_line}
+		return {}
+
+	var speaker_end := text.find(" ")
+	if speaker_end <= 0:
+		return {}
+	var speaker_and_attributes := text.substr(0, speaker_end)
+	var speaker := speaker_and_attributes
+	var image_attributes := ""
+	var attribute_separator := speaker_and_attributes.find("@")
+	if attribute_separator >= 0:
+		speaker = speaker_and_attributes.substr(0, attribute_separator)
+		image_attributes = speaker_and_attributes.substr(attribute_separator + 1)
+	if not _is_identifier(speaker):
+		return {}
+	var quote_start := text.find("\"", speaker_end)
+	if quote_start < 0:
+		return {}
+	var spoken_text := _read_quoted_value(text, quote_start)
+	if spoken_text.is_empty() or not text.substr(int(spoken_text.end)).strip_edges().is_empty():
+		return {}
+	return {
+		"type": "dialogue",
+		"speaker": speaker,
+		"image_attributes": image_attributes,
+		"text": spoken_text.value,
+		"line": source_line
+	}
+
+
+func _parse_menu_choice_header(text: String) -> Dictionary:
+	if not text.begins_with("\""):
+		return {}
+	var quoted := _read_quoted_value(text, 0)
+	if quoted.is_empty():
+		return {}
+	var suffix := text.substr(int(quoted.end)).strip_edges()
+	if not suffix.ends_with(":"):
+		return {}
+	suffix = suffix.trim_suffix(":").strip_edges()
+	var condition := ""
+	if not suffix.is_empty():
+		if not suffix.begins_with("if "):
+			return {}
+		condition = suffix.trim_prefix("if ").strip_edges()
+	return {"text": quoted.value, "condition": condition}
+
+
+func _parse_assignment(text: String, source_line: int) -> Dictionary:
+	var assignment_regex := RegEx.new()
+	assignment_regex.compile("^([A-Za-z_]\\w*)\\s*(\\+=|-=|\\*=|/=|=)\\s*(.+)$")
+	var assignment_match := assignment_regex.search(text)
+	if assignment_match == null:
+		return {}
+
+	var target := assignment_match.get_string(1)
+	var operator := assignment_match.get_string(2)
+	var expression := assignment_match.get_string(3).strip_edges()
+	var input_call := _parse_input_call(expression)
+	if not input_call.is_empty():
+		input_call["type"] = "text_input"
+		input_call["target"] = target
+		input_call["line"] = source_line
+		return input_call
+
+	return {
+		"type": "assignment",
+		"target": target,
+		"operator": operator,
+		"expression": expression,
+		"line": source_line
+	}
+
+
+func _parse_input_call(expression: String) -> Dictionary:
+	if not expression.begins_with("renpy.input(") or not expression.ends_with(")"):
+		return {}
+	var argument_text := expression.substr("renpy.input(".length())
+	argument_text = argument_text.trim_suffix(")").strip_edges()
+	var quoted := _read_quoted_value(argument_text, 0)
+	if quoted.is_empty():
+		return {}
+	var remainder := argument_text.substr(int(quoted.end)).strip_edges()
+	var maximum_length := 10
+	var length_regex := RegEx.new()
+	length_regex.compile("(?:^|,)\\s*length\\s*=\\s*(\\d+)")
+	var length_match := length_regex.search(remainder)
+	if length_match != null:
+		maximum_length = clampi(int(length_match.get_string(1)), 1, 10)
+	return {"prompt": quoted.value, "max_length": maximum_length}
+
+
+func _read_quoted_value(text: String, start_index: int) -> Dictionary:
+	if start_index < 0 or start_index >= text.length() or text.substr(start_index, 1) != "\"":
+		return {}
+
+	var escaped := false
+	for character_index in range(start_index + 1, text.length()):
+		var character := text.substr(character_index, 1)
+		if escaped:
+			escaped = false
+			continue
+		if character == "\\":
+			escaped = true
+			continue
+		if character == "\"":
+			var literal := text.substr(start_index, character_index - start_index + 1)
+			# JSON.parse_string は引用符内の Ren'Py エスケープ文字列を GDS の String に変換します。
+			var parsed_value: Variant = JSON.parse_string(literal)
+			if parsed_value is String:
+				return {"value": parsed_value, "end": character_index + 1}
+			return {}
+	return {}
+
+
+func _is_if_branch_header(text: String) -> bool:
+	return text.begins_with("elif ") or text.begins_with("elif(") or text == "else:" or text == "else :"
+
+
+func _is_if_header(text: String) -> bool:
+	return text.begins_with("if ") or text.begins_with("if(")
+
+
+func _header_expression(text: String, keyword: String) -> String:
+	return text.trim_prefix(keyword).trim_suffix(":").strip_edges()
+
+
+func _is_identifier(value: String) -> bool:
+	var identifier_regex := RegEx.new()
+	identifier_regex.compile("^[A-Za-z_]\\w*$")
+	return identifier_regex.search(value) != null
+
+
+# コンパイル: インデントブロックを、ジャンプ可能な実行命令列へ変換します。
+func _collect_declarations(root_nodes: Array[Dictionary]) -> void:
+	for statement in root_nodes:
+		var statement_type := str(statement.get("type", ""))
+		if statement_type == "default":
+			_default_variables[str(statement.target)] = _evaluate_value(str(statement.expression))
+		elif statement_type == "define":
+			var variable_name := str(statement.target)
+			if variable_name != "c":
+				_defined_variables[variable_name] = _evaluate_value(str(statement.expression))
+
+
+func _compile_nodes(statements: Array[Dictionary]) -> void:
+	for statement in statements:
+		var statement_type := str(statement.get("type", ""))
+		match statement_type:
+			"default", "define", "noop":
+				continue
+			"label":
+				_program.append({"op": "label", "name": str(statement.name), "line": int(statement.line)})
+				if _label_program_indices.has(str(statement.name)):
+					_parse_error = "label が重複しています: %s" % statement.name
+					return
+				_label_program_indices[str(statement.name)] = _program.size()
+				_compile_nodes(statement.body)
+			"block", "python_block":
+				_compile_nodes(statement.body)
+			"if":
+				_compile_if(statement)
+			"menu":
+				_compile_menu(statement)
+			"dialogue":
+				_program.append({
+					"op": "dialogue",
+					"speaker": str(statement.speaker),
+					"text": str(statement.text),
+					"line": int(statement.line)
+				})
+			"assignment":
+				_program.append({"op": "assignment", "statement": statement})
+			"text_input":
+				_program.append({"op": "text_input", "statement": statement})
+			"jump", "call":
+				_program.append({
+					"op": statement_type,
+					"target": str(statement.target),
+					"line": int(statement.line)
+				})
+			"return":
+				_program.append({"op": "return", "line": int(statement.line)})
+			"visual":
+				var zoom := 0.0
+				for transform_value: Variant in statement.get("transform", []):
+					if transform_value is Dictionary and transform_value.get("type") == "transform":
+						zoom = float(transform_value.get("zoom", 0.0))
+				_program.append({
+					"op": "visual",
+					"command": str(statement.command),
+					"zoom": zoom,
+					"line": int(statement.line)
+				})
+			"transform":
+				continue
+			_:
+				_parse_error = "未対応の構文ノードです: %s" % statement_type
 				return
-			var target_index := int(_label_flow_indices[target_label])
-			_prune_conditional_boundaries_for_line(int(_flow[target_index].get("source_line", 0)))
-			_prune_branch_boundaries_for_line(int(_flow[target_index].get("source_line", 0)))
-			_flow_index = target_index + 1
-			continue
 
-		if event_type == "if" or event_type == "elif" or event_type == "else":
-			_process_condition(flow_entry)
-			continue
 
-		if event_type == "assignment":
-			_apply_assignment(flow_entry)
-			_flow_index += 1
-			continue
+func _compile_if(statement: Dictionary) -> void:
+	var branches: Array = statement.get("branches", [])
+	var pending_condition_index := -1
+	var end_jump_indices: Array[int] = []
 
-		var event := _make_game_event(flow_entry)
-		if event.is_empty():
-			_flow_index += 1
-			continue
+	for branch_index in range(branches.size()):
+		var branch: Dictionary = branches[branch_index]
+		var branch_start := _program.size()
+		if pending_condition_index >= 0:
+			_program[pending_condition_index].false_target = branch_start
+			pending_condition_index = -1
 
-		_waiting_for_response = true
-		if event_type == "menu":
-			_pending_menu_flow_index = _flow_index
-		elif event.has("menu_id"):
-			var menu_id := str(event.get("menu_id", ""))
-			if _menu_flow_indices.has(menu_id):
-				_pending_menu_flow_index = int(_menu_flow_indices[menu_id])
-		event_ready.emit(event)
-		return
+		if not bool(branch.otherwise):
+			pending_condition_index = _program.size()
+			_program.append({
+				"op": "condition",
+				"expression": str(branch.expression),
+				"false_target": -1,
+				"line": int(statement.line)
+			})
+		_compile_nodes(branch.body)
+		if branch_index < branches.size() - 1:
+			end_jump_indices.append(_program.size())
+			_program.append({"op": "jump_pc", "target_pc": -1})
+
+	var end_index := _program.size()
+	if pending_condition_index >= 0:
+		_program[pending_condition_index].false_target = end_index
+	for jump_index in end_jump_indices:
+		_program[jump_index].target_pc = end_index
+
+
+func _compile_menu(statement: Dictionary) -> void:
+	var branches: Array = statement.get("choices", [])
+	var menu_instruction_index := _program.size()
+	_program.append({
+		"op": "menu",
+		"prompt": str(statement.get("prompt", "")),
+		"choices": [],
+		"end_pc": -1,
+		"line": int(statement.line)
+	})
+
+	var compiled_choices: Array[Dictionary] = []
+	var end_jump_indices: Array[int] = []
+	for branch in branches:
+		var choice_target := _program.size()
+		_compile_nodes(branch.body)
+		end_jump_indices.append(_program.size())
+		_program.append({"op": "jump_pc", "target_pc": -1})
+		compiled_choices.append({
+			"text": str(branch.text),
+			"condition": str(branch.condition),
+			"target_pc": choice_target
+		})
+
+	var end_index := _program.size()
+	for jump_index in end_jump_indices:
+		_program[jump_index].target_pc = end_index
+	_program[menu_instruction_index].choices = compiled_choices
+	_program[menu_instruction_index].end_pc = end_index
+
+
+# 実行: 内部命令を処理し、表示や入力が必要なときだけ Dialog へイベントを渡します。
+func _run_until_event() -> void:
+	while _program_counter < _program.size():
+		var instruction: Dictionary = _program[_program_counter]
+		_program_counter += 1
+		var operation := str(instruction.get("op", ""))
+		match operation:
+			"label":
+				continue
+			"jump_pc":
+				_program_counter = int(instruction.target_pc)
+				continue
+			"condition":
+				if not bool(_evaluate_expression(str(instruction.expression))):
+					_program_counter = int(instruction.false_target)
+				continue
+			"assignment":
+				_apply_assignment(instruction.statement)
+				continue
+			"jump":
+				if not _jump_to_label(str(instruction.target)):
+					return
+				continue
+			"call":
+				if not _label_program_indices.has(str(instruction.target)):
+					push_error("call 先の label がありません: %s" % instruction.target)
+					return
+				_call_stack.append(_program_counter)
+				_program_counter = int(_label_program_indices[instruction.target])
+				continue
+			"return":
+				if _call_stack.is_empty():
+					story_finished.emit()
+					return
+				_program_counter = int(_call_stack.pop_back())
+				continue
+			"dialogue":
+				_waiting_for_response = true
+				event_ready.emit({
+					"type": "dialogue",
+					"speaker": _resolve_speaker(str(instruction.speaker)),
+					"text": _interpolate_text(str(instruction.text)),
+					"source_line": int(instruction.line)
+				})
+				return
+			"menu":
+				if not _present_menu(instruction):
+					continue
+				return
+			"text_input":
+				var input_statement: Dictionary = instruction.statement
+				_pending_input_variable = str(input_statement.target)
+				_waiting_for_response = true
+				event_ready.emit({
+					"type": "text_input",
+					"prompt": _interpolate_text(str(input_statement.prompt)),
+					"max_length": int(input_statement.max_length),
+					"source_line": int(input_statement.line)
+				})
+				return
+			"visual":
+				_waiting_for_response = true
+				event_ready.emit({
+					"type": "visual_command",
+					"command": str(instruction.command),
+					"zoom": float(instruction.zoom),
+					"source_line": int(instruction.line)
+				})
+				return
+			_:
+				push_error("未対応の実行命令です: %s" % operation)
+				return
 
 	story_finished.emit()
 
 
-func _make_game_event(flow_entry: Dictionary) -> Dictionary:
-	var event_type := str(flow_entry.get("type", ""))
-	var event := flow_entry.duplicate(true)
-
-	match event_type:
-		"dialogue":
-			var dialogue_id := str(flow_entry.get("id", ""))
-			if not _dialogues_by_id.has(dialogue_id):
-				push_error("台詞 ID が見つかりません: %s" % dialogue_id)
-				return {}
-
-			var dialogue: Dictionary = _dialogues_by_id[dialogue_id]
-			var character_name_before: Variant = _story_variables.get("character_name")
-			var pre_assignments: Variant = dialogue.get("pre_assignments", [])
-			if pre_assignments is Array:
-				_apply_assignments(pre_assignments)
-			if dialogue_id == "line_014":
-				var character_name_after: Variant = _story_variables.get("character_name")
-				var assignment_was_applied: bool = (
-					character_name_before == null and character_name_after == "%s"
-				)
-				print(
-					"[RenpyStoryProcessor] line_014 発話直前: 代入実行 = ",
-					assignment_was_applied,
-					", character_name = ",
-					character_name_after
-				)
-
-			var speaker_id := str(dialogue.get("speaker", ""))
-			var speaker_variable := str(dialogue.get("speaker_variable", ""))
-			if speaker_id == "c":
-				# Ren'Py の Character 名 c は識別子として扱い、表示名を character_name から解決します。
-				var character_name_value: Variant = _story_variables.get("character_name")
-				event["speaker"] = str(character_name_value) if character_name_value != null else ""
-			elif not speaker_variable.is_empty():
-				var speaker_value: Variant = _story_variables.get(speaker_variable)
-				if speaker_value == null:
-					event["speaker"] = str(dialogue.get("speaker", ""))
-				else:
-					event["speaker"] = str(speaker_value)
-			else:
-				event["speaker"] = dialogue.get("speaker")
-			event["text"] = _interpolate_story_variables(str(dialogue.get("text", "")))
-			event["label"] = str(dialogue.get("label", ""))
-			var menu_id := str(dialogue.get("menu_id", ""))
-			if not menu_id.is_empty():
-				event["menu_id"] = menu_id
-				event["choices"] = _get_menu_choices(menu_id)
-		"menu":
-			var menu_id := str(flow_entry.get("id", ""))
-			event["choices"] = _get_menu_choices(menu_id)
-		"visual_command":
-			var command_id := str(flow_entry.get("id", ""))
-			if not _commands_by_id.has(command_id):
-				push_error("表示指示 ID が見つかりません: %s" % command_id)
-				return {}
-
-			event["command"] = _commands_by_id[command_id]
-		_:
-			# JSON にある条件と代入は dispatch 側で処理し、ゲーム画面へは表示イベントだけを送ります。
-			pass
-
-	return event
-
-
-func _parse_dialog_choices(choice_values: Array) -> Array[Dictionary]:
-	var dialog_choices: Array[Dictionary] = []
-	for choice_value: Variant in choice_values:
+func _present_menu(instruction: Dictionary) -> bool:
+	var visible_choices: Array[Dictionary] = []
+	_pending_choice_targets.clear()
+	for choice_value: Variant in instruction.choices:
 		if not choice_value is Dictionary:
-			push_error("JSON の選択肢は Dictionary である必要があります。")
-			return []
-
+			continue
 		var choice: Dictionary = choice_value
-		if not choice.get("text") is String:
-			push_error("JSON の選択肢に String 型の text がありません。")
-			return []
+		var condition := str(choice.get("condition", ""))
+		if not condition.is_empty() and not bool(_evaluate_expression(condition)):
+			continue
+		visible_choices.append({"text": str(choice.text)})
+		_pending_choice_targets.append(int(choice.target_pc))
 
-		# Dialog は text を表示し、同じ Dictionary 内の遷移情報を選択結果として返します。
-		dialog_choices.append(choice.duplicate(true))
+	if visible_choices.is_empty():
+		_program_counter = int(instruction.end_pc)
+		return false
 
-	return dialog_choices
-
-
-func _get_menu_choices(menu_id: String) -> Array[Dictionary]:
-	if not _menu_flow_indices.has(menu_id):
-		push_error("メニュー ID が見つかりません: %s" % menu_id)
-		return []
-
-	var menu_flow_index := int(_menu_flow_indices[menu_id])
-	var menu_event: Dictionary = _flow[menu_flow_index]
-	var choices_value: Variant = menu_event.get("choices", [])
-	if not choices_value is Array:
-		push_error("flow の menu event に choices 配列がありません: %s" % menu_id)
-		return []
-
-	# 選択肢と遷移先は、時系列上の menu event にまとめて記述します。
-	return _parse_dialog_choices(choices_value)
+	_waiting_for_response = true
+	var prompt := _interpolate_text(str(instruction.prompt))
+	if prompt.is_empty():
+		event_ready.emit({"type": "menu", "choices": visible_choices, "source_line": int(instruction.line)})
+	else:
+		event_ready.emit({
+			"type": "menu",
+			"prompt": prompt,
+			"choices": visible_choices,
+			"source_line": int(instruction.line)
+		})
+	return true
 
 
-# 表示用データ: 台詞中の変数を置換し、入力値を検証
-func _interpolate_story_variables(text: String) -> String:
-	var result := text
+func _jump_to_label(label_name: String) -> bool:
+	if not _label_program_indices.has(label_name):
+		push_error("jump 先の label がありません: %s" % label_name)
+		return false
+	_program_counter = int(_label_program_indices[label_name])
+	return true
+
+
+func _resolve_speaker(speaker_id: String) -> String:
+	if speaker_id != "c":
+		return speaker_id
+	var character_name: Variant = _story_variables.get("character_name", "")
+	return str(character_name) if character_name != null else ""
+
+
+func _interpolate_text(source_text: String) -> String:
+	var result := source_text
 	for variable_name: Variant in _story_variables:
 		var variable_value: Variant = _story_variables[variable_name]
 		if variable_value == null:
 			continue
-		result = result.replace(
-			"[%s]" % str(variable_name),
-			str(variable_value)
-		)
+		result = result.replace("[%s]" % str(variable_name), str(variable_value))
 	return result
 
 
-func _is_safe_story_name(value: String, max_length: int) -> bool:
-	if value.is_empty() or value.length() > max_length:
+func _apply_assignment(statement: Dictionary) -> void:
+	var target := str(statement.target)
+	var operator := str(statement.operator)
+	var expression := str(statement.expression)
+	var value: Variant
+	var random_slice := RegEx.new()
+	random_slice.compile("^([A-Za-z_]\\w*)\\[:renpy\\.random\\.randint\\((\\d+),(\\d+)\\)\\]$")
+	var slice_match := random_slice.search(expression)
+	if slice_match != null:
+		var source_value := str(_story_variables.get(slice_match.get_string(1), ""))
+		var minimum_length := int(slice_match.get_string(2))
+		var maximum_length := int(slice_match.get_string(3))
+		var slice_length := _random.randi_range(minimum_length, maximum_length)
+		value = source_value.substr(0, slice_length)
+	elif expression.ends_with(".strip()"):
+		var source_variable := expression.trim_suffix(".strip()")
+		value = str(_story_variables.get(source_variable, "")).strip_edges()
+	else:
+		value = _evaluate_value(expression)
+
+	if operator != "=":
+		var left_value: Variant = _story_variables.get(target, 0)
+		var full_expression := _assignment_expression(operator, left_value, value)
+		value = _evaluate_expression(full_expression)
+	_story_variables[target] = value
+
+
+func _assignment_expression(operator: String, left_value: Variant, right_value: Variant) -> String:
+	var operation := operator.trim_suffix("=")
+	return "%s %s %s" % [str(left_value), operation, str(right_value)]
+
+
+func _evaluate_value(expression: String) -> Variant:
+	var value := expression.strip_edges()
+	if value == "True":
+		return true
+	if value == "False":
 		return false
-
-	# RegEx は Godot 組み込み API です。制御文字やタグ記号を許可しない名前の許可リストにします。
-	var safe_name_regex := RegEx.new()
-	safe_name_regex.compile(SAFE_NAME_PATTERN.replace("10", str(max_length)))
-	return safe_name_regex.search(value) != null
-
-
-func _process_condition(flow_entry: Dictionary) -> void:
-	var condition_type := str(flow_entry.get("type", ""))
-	var condition_passes := condition_type == "else"
-	if condition_type != "else":
-		condition_passes = bool(_evaluate_expression(str(flow_entry.get("expression", ""))))
-
-	if condition_passes:
-		var next_branch: Variant = flow_entry.get("next_branch_source_line")
-		var continuation: Variant = flow_entry.get("continuation_source_line")
-		if next_branch is int and continuation is int:
-			_conditional_boundaries.append({
-				"skip_at_source_line": next_branch,
-				"continuation_source_line": continuation
-			})
-		_flow_index += 1
-		return
-
-	var next_branch_line: Variant = flow_entry.get("next_branch_source_line")
-	var continuation_line: Variant = flow_entry.get("continuation_source_line")
-	var target_line := int(next_branch_line) if next_branch_line is int else int(continuation_line)
-	_flow_index = _find_flow_index_at_or_after_line(target_line)
-
-
-func _skip_completed_conditional_branch() -> bool:
-	if _conditional_boundaries.is_empty():
-		return false
-
-	var boundary: Dictionary = _conditional_boundaries.back()
-	var current_line := int(_flow[_flow_index].get("source_line", 0))
-	if current_line < int(boundary["skip_at_source_line"]):
-		return false
-
-	_conditional_boundaries.pop_back()
-	_flow_index = _find_flow_index_at_or_after_line(int(boundary["continuation_source_line"]))
-	return true
-
-
-func _apply_assignments(assignments_value: Variant) -> void:
-	if not assignments_value is Array:
-		return
-
-	for assignment_value: Variant in assignments_value:
-		if assignment_value is Dictionary:
-			_apply_assignment(assignment_value)
-
-
-func _apply_assignment(assignment: Dictionary) -> void:
-	var target := str(assignment.get("target", ""))
-	if target.is_empty():
-		push_error("変数代入イベントに target がありません。")
-		return
-
-	if bool(assignment.get("only_if_null", false)) and _story_variables.get(target) != null:
-		return
-
-	if assignment.has("generator"):
-		if str(assignment.get("generator", "")) != "random_string":
-			push_error("未対応の代入 generator です: %s" % assignment.get("generator"))
-			return
-
-		var minimum_length := clampi(int(assignment.get("min_length", 1)), 1, 10)
-		var maximum_length := clampi(int(assignment.get("max_length", 10)), minimum_length, 10)
-		var characters := str(assignment.get("characters", ""))
-		if characters.is_empty():
-			push_error("random_string の characters が空です。")
-			return
-
-		_story_variables[target] = _generate_random_string(
-			minimum_length,
-			maximum_length,
-			characters
-		)
-		return
-
-	if assignment.has("value"):
-		_story_variables[target] = assignment["value"]
-		return
-
-	var expression := str(assignment.get("expression", ""))
+	if value == "None":
+		return null
 
 	var random_choice := RegEx.new()
 	random_choice.compile("^renpy\\.random\\.choice\\(([A-Za-z_]\\w*)\\)$")
-	var choice_match := random_choice.search(expression)
+	var choice_match := random_choice.search(value)
 	if choice_match != null:
-		var choices_value: Variant = _story_variables.get(choice_match.get_string(1), [])
+		var choices_value: Variant = _story_variables.get(choice_match.get_string(1), _defined_variables.get(choice_match.get_string(1), []))
 		if choices_value is Array and not choices_value.is_empty():
-			_story_variables[target] = choices_value[randi_range(0, choices_value.size() - 1)]
-			return
+			return choices_value[_random.randi_range(0, choices_value.size() - 1)]
 
-	_story_variables[target] = _evaluate_expression(expression)
-
-
-func _generate_random_string(minimum_length: int, maximum_length: int, characters: String) -> String:
-	# randi_range は Godot の乱数 API です。指定範囲の長さと文字を選んで名前を作ります。
-	var generated_length := randi_range(minimum_length, maximum_length)
-	var generated_name := ""
-	for character_index in range(generated_length):
-		var random_index := randi_range(0, characters.length() - 1)
-		generated_name += characters.substr(random_index, 1)
-	return generated_name
+	var parsed_value: Variant = JSON.parse_string(value)
+	if parsed_value != null or value == "null":
+		return parsed_value
+	if value.is_valid_int():
+		return int(value)
+	if value.is_valid_float():
+		return float(value)
+	return _evaluate_expression(value)
 
 
 func _evaluate_expression(expression: String) -> Variant:
-	# Ren'Py の randint 呼び出しを Godot の乱数値に置き換えてから式を評価します。
-	var translated_expression := expression
+	var translated := expression.replace("True", "true").replace("False", "false")
 	var random_integer := RegEx.new()
 	random_integer.compile("renpy\\.random\\.randint\\(\\s*(-?\\d+)\\s*,\\s*(-?\\d+)\\s*\\)")
-	var random_match := random_integer.search(translated_expression)
+	var random_match := random_integer.search(translated)
 	while random_match != null:
 		var minimum := int(random_match.get_string(1))
 		var maximum := int(random_match.get_string(2))
-		translated_expression = translated_expression.replace(
-			random_match.get_string(), str(randi_range(minimum, maximum))
+		translated = translated.replace(
+			random_match.get_string(), str(_random.randi_range(minimum, maximum))
 		)
-		random_match = random_integer.search(translated_expression)
+		random_match = random_integer.search(translated)
 
 	var input_names := PackedStringArray()
 	var input_values: Array = []
-	var variable_pattern := RegEx.new()
-	variable_pattern.compile("[A-Za-z_]\\w*")
-	for name_match: RegExMatch in variable_pattern.search_all(translated_expression):
-		var variable_name := name_match.get_string()
+	var variable_regex := RegEx.new()
+	variable_regex.compile("[A-Za-z_]\\w*")
+	for variable_match: RegExMatch in variable_regex.search_all(translated):
+		var variable_name := variable_match.get_string()
 		if variable_name in ["not", "and", "or", "true", "false", "null"]:
 			continue
 		if input_names.has(variable_name):
 			continue
 		input_names.append(variable_name)
-		input_values.append(_story_variables.get(variable_name))
+		input_values.append(_story_variables.get(variable_name, _defined_variables.get(variable_name)))
 
-	# Expression は Godot 組み込みの式評価 API で、JSON の式と変数値を使って条件を判定します。
+	# Expression は Godot の式評価 API です。Ren'Py の条件・算術式を安全に評価します。
 	var parsed_expression := Expression.new()
-	var parse_error: Error = parsed_expression.parse(translated_expression, input_names)
+	var parse_error: Error = parsed_expression.parse(translated, input_names)
 	if parse_error != OK:
-		push_error("条件式を解析できません: %s" % expression)
+		push_error("Ren'Py 式を解析できません: %s" % expression)
 		return false
-
 	var result: Variant = parsed_expression.execute(input_values, self, false)
 	if parsed_expression.has_execute_failed():
-		push_error("条件式を評価できません: %s" % expression)
+		push_error("Ren'Py 式を評価できません: %s" % expression)
 		return false
 	return result
 
 
-# 分岐管理: 選択肢と条件ブロックの終端を処理
-func _get_choice_destination(choice: Dictionary, default_index: int) -> int:
-	var destination_value: Variant = choice.get("destination", {})
-	if destination_value is Dictionary:
-		var destination: Dictionary = destination_value
-		var entry_line: Variant = destination.get("entry_source_line")
-		if entry_line is int:
-			return _find_flow_index_at_or_after_line(entry_line)
-
-	var target_label := str(choice.get("target_label", ""))
-	if not target_label.is_empty() and _label_flow_indices.has(target_label):
-		return int(_label_flow_indices[target_label]) + 1
-
-	var target_dialogue_id := str(choice.get("target_dialogue_id", ""))
-	if not target_dialogue_id.is_empty() and _flow_index_by_dialogue_id.has(target_dialogue_id):
-		return int(_flow_index_by_dialogue_id[target_dialogue_id])
-
-	var target_source_line: Variant = choice.get("target_source_line")
-	if target_source_line is int:
-		return _find_flow_index_at_or_after_line(target_source_line)
-
-	return default_index
-
-
-func _find_flow_index_at_or_after_line(source_line: int) -> int:
-	for index in range(_flow.size()):
-		var flow_entry: Dictionary = _flow[index]
-		if int(flow_entry.get("source_line", 0)) >= source_line:
-			return index
-
-	return _flow.size()
-
-
-func _register_branch_boundary(destination: Dictionary) -> void:
-	# JSON の暗黙 jump は、選択肢ブロック終了後に未選択の兄弟ブロックを飛ばします。
-	var branch_end: Variant = destination.get("branch_end_source_line")
-	var continuation: Variant = destination.get("continuation_source_line")
-	var implicit_jump_value: Variant = destination.get("jump")
-	if implicit_jump_value is Dictionary:
-		var implicit_jump: Dictionary = implicit_jump_value
-		continuation = implicit_jump.get("target_source_line", continuation)
-
-	if branch_end is int and continuation is int:
-		_branch_boundaries.append({
-			"branch_end_source_line": branch_end,
-			"continuation_source_line": continuation,
-			"destination_type": str(destination.get("type", ""))
-		})
-
-
-func _skip_completed_branch() -> bool:
-	if _branch_boundaries.is_empty():
+func _is_safe_input(value: String) -> bool:
+	if value.length() > 10:
 		return false
-
-	var boundary: Dictionary = _branch_boundaries.back()
-	var branch_end := int(boundary["branch_end_source_line"])
-	var current_line := int(_flow[_flow_index].get("source_line", 0))
-	if current_line < branch_end:
-		return false
-
-	_branch_boundaries.pop_back()
-	if boundary.get("destination_type") == "return":
-		_flow_index = _flow.size()
-		return true
-
-	var continuation_line := int(boundary["continuation_source_line"])
-	_flow_index = _find_flow_index_at_or_after_line(continuation_line)
-	return true
-
-
-func _prune_branch_boundaries_for_line(target_line: int) -> void:
-	while not _branch_boundaries.is_empty():
-		var boundary: Dictionary = _branch_boundaries.back()
-		var branch_end := int(boundary["branch_end_source_line"])
-		if target_line < branch_end:
-			return
-		_branch_boundaries.pop_back()
-
-
-func _prune_conditional_boundaries_for_line(target_line: int) -> void:
-	while not _conditional_boundaries.is_empty():
-		var boundary: Dictionary = _conditional_boundaries.back()
-		if target_line < int(boundary["skip_at_source_line"]):
-			return
-		_conditional_boundaries.pop_back()
-
-
-func _get_flow_source_line(flow_index: int) -> int:
-	if flow_index < 0 or flow_index >= _flow.size():
-		return 2147483647
-
-	return int(_flow[flow_index].get("source_line", 0))
+	var safe_regex := RegEx.new()
+	safe_regex.compile(SAFE_NAME_PATTERN)
+	return safe_regex.search(value) != null

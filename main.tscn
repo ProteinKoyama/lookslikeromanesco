@@ -8,10 +8,28 @@
 [node name="Main" type="Node2D" unique_id=469165126]
 script = ExtResource("3_main")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=990809186]
+[node name="Background" type="ColorRect" parent="." unique_id=990809186]
 offset_right = 1935.0
 offset_bottom = 1098.0
 color = Color(0, 0, 0, 1)
+
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+visible = false
+z_index = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CharacterSprite" type="Sprite2D" parent="."]
+visible = false
+z_index = 2
+texture_filter = 1
+centered = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1399644334]
 
