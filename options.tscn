@@ -140,17 +140,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BGMLabel" type="Label" parent="Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer" unique_id=1657986838]
-layout_mode = 2
-theme = SubResource("Theme_Options")
-text = "BGM 音量: 50"
-
-[node name="BGMSlider" type="HSlider" parent="Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer" unique_id=956903395]
-custom_minimum_size = Vector2(420, 48)
-layout_mode = 2
-theme = SubResource("Theme_Options")
-value = 50.0
-
 [node name="SELabel" type="Label" parent="Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer" unique_id=1896279783]
 layout_mode = 2
 theme = SubResource("Theme_Options")
@@ -204,10 +193,10 @@ theme = SubResource("Theme_Options")
 theme_override_constants/separation = 18
 metadata/_tab_index = 1
 
-[node name="SaveSlot1Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ"]
+[node name="SaveSlot1Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ" unique_id=1458245725]
 layout_mode = 2
 
-[node name="SaveSlot1Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot1Row"]
+[node name="SaveSlot1Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot1Row" unique_id=1860310855]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -216,15 +205,15 @@ text = "スロット1: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="SaveSlot1Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot1Row"]
+[node name="SaveSlot1Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot1Row" unique_id=1664551025]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 text = "保存"
 
-[node name="SaveSlot2Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ"]
+[node name="SaveSlot2Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ" unique_id=2002586435]
 layout_mode = 2
 
-[node name="SaveSlot2Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot2Row"]
+[node name="SaveSlot2Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot2Row" unique_id=1207096474]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -233,15 +222,15 @@ text = "スロット2: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="SaveSlot2Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot2Row"]
+[node name="SaveSlot2Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot2Row" unique_id=426850765]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 text = "保存"
 
-[node name="SaveSlot3Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ"]
+[node name="SaveSlot3Row" type="HBoxContainer" parent="Frame/Margin/Tabs/セーブ" unique_id=1131634162]
 layout_mode = 2
 
-[node name="SaveSlot3Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot3Row"]
+[node name="SaveSlot3Label" type="Label" parent="Frame/Margin/Tabs/セーブ/SaveSlot3Row" unique_id=1156322997]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -250,14 +239,13 @@ text = "スロット3: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="SaveSlot3Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot3Row"]
+[node name="SaveSlot3Button" type="Button" parent="Frame/Margin/Tabs/セーブ/SaveSlot3Row" unique_id=708576081]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 text = "保存"
 
-[node name="SaveStatusLabel" type="Label" parent="Frame/Margin/Tabs/セーブ"]
+[node name="SaveStatusLabel" type="Label" parent="Frame/Margin/Tabs/セーブ" unique_id=1514516506]
 layout_mode = 2
-text = ""
 autowrap_mode = 2
 
 [node name="ロード" type="VBoxContainer" parent="Frame/Margin/Tabs" unique_id=2002315792]
@@ -267,10 +255,10 @@ theme = SubResource("Theme_Options")
 theme_override_constants/separation = 18
 metadata/_tab_index = 2
 
-[node name="LoadSlot1Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード"]
+[node name="LoadSlot1Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード" unique_id=547080250]
 layout_mode = 2
 
-[node name="LoadSlot1Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot1Row"]
+[node name="LoadSlot1Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot1Row" unique_id=1153756785]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -279,16 +267,16 @@ text = "スロット1: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="LoadSlot1Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot1Row"]
+[node name="LoadSlot1Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot1Row" unique_id=6651329]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 disabled = true
 text = "ロード"
 
-[node name="LoadSlot2Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード"]
+[node name="LoadSlot2Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード" unique_id=920827254]
 layout_mode = 2
 
-[node name="LoadSlot2Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot2Row"]
+[node name="LoadSlot2Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot2Row" unique_id=1788459158]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -297,16 +285,16 @@ text = "スロット2: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="LoadSlot2Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot2Row"]
+[node name="LoadSlot2Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot2Row" unique_id=1779208358]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 disabled = true
 text = "ロード"
 
-[node name="LoadSlot3Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード"]
+[node name="LoadSlot3Row" type="HBoxContainer" parent="Frame/Margin/Tabs/ロード" unique_id=2123939009]
 layout_mode = 2
 
-[node name="LoadSlot3Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot3Row"]
+[node name="LoadSlot3Label" type="Label" parent="Frame/Margin/Tabs/ロード/LoadSlot3Row" unique_id=2061213613]
 custom_minimum_size = Vector2(1100, 220)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -315,81 +303,14 @@ text = "スロット3: 空き"
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="LoadSlot3Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot3Row"]
+[node name="LoadSlot3Button" type="Button" parent="Frame/Margin/Tabs/ロード/LoadSlot3Row" unique_id=41469533]
 custom_minimum_size = Vector2(280, 100)
 layout_mode = 2
 disabled = true
 text = "ロード"
 
-[node name="LoadStatusLabel" type="Label" parent="Frame/Margin/Tabs/ロード"]
+[node name="LoadStatusLabel" type="Label" parent="Frame/Margin/Tabs/ロード" unique_id=215124953]
 layout_mode = 2
-text = ""
-autowrap_mode = 2
-
-[node name="データ削除" type="VBoxContainer" parent="Frame/Margin/Tabs"]
-visible = false
-layout_mode = 2
-theme = SubResource("Theme_Options")
-theme_override_constants/separation = 18
-metadata/_tab_index = 3
-
-[node name="DeleteSlot1Row" type="HBoxContainer" parent="Frame/Margin/Tabs/データ削除"]
-layout_mode = 2
-
-[node name="DeleteSlot1Label" type="Label" parent="Frame/Margin/Tabs/データ削除/DeleteSlot1Row"]
-custom_minimum_size = Vector2(1100, 220)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 36
-text = "スロット1: 空き"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="DeleteSlot1Button" type="Button" parent="Frame/Margin/Tabs/データ削除/DeleteSlot1Row"]
-custom_minimum_size = Vector2(280, 100)
-layout_mode = 2
-disabled = true
-text = "削除"
-
-[node name="DeleteSlot2Row" type="HBoxContainer" parent="Frame/Margin/Tabs/データ削除"]
-layout_mode = 2
-
-[node name="DeleteSlot2Label" type="Label" parent="Frame/Margin/Tabs/データ削除/DeleteSlot2Row"]
-custom_minimum_size = Vector2(1100, 220)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 36
-text = "スロット2: 空き"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="DeleteSlot2Button" type="Button" parent="Frame/Margin/Tabs/データ削除/DeleteSlot2Row"]
-custom_minimum_size = Vector2(280, 100)
-layout_mode = 2
-disabled = true
-text = "削除"
-
-[node name="DeleteSlot3Row" type="HBoxContainer" parent="Frame/Margin/Tabs/データ削除"]
-layout_mode = 2
-
-[node name="DeleteSlot3Label" type="Label" parent="Frame/Margin/Tabs/データ削除/DeleteSlot3Row"]
-custom_minimum_size = Vector2(1100, 220)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 36
-text = "スロット3: 空き"
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="DeleteSlot3Button" type="Button" parent="Frame/Margin/Tabs/データ削除/DeleteSlot3Row"]
-custom_minimum_size = Vector2(280, 100)
-layout_mode = 2
-disabled = true
-text = "削除"
-
-[node name="DeleteStatusLabel" type="Label" parent="Frame/Margin/Tabs/データ削除"]
-layout_mode = 2
-text = ""
 autowrap_mode = 2
 
 [node name="ゲーム終了" type="VBoxContainer" parent="Frame/Margin/Tabs" unique_id=2091601113]
@@ -397,7 +318,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
-metadata/_tab_index = 4
+metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Frame/Margin/Tabs/ゲーム終了" unique_id=410398241]
 layout_mode = 2
@@ -428,9 +349,5 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_7g1a8")
 text = "とじる"
-
-[node name="DeleteSlotConfirmation" type="ConfirmationDialog" parent="."]
-dialog_text = "このスロットのセーブデータを完全に削除しますか？"
-ok_button_text = "削除"
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

@@ -6,7 +6,6 @@ signal story_event_received(event: Dictionary)
 signal story_finished
 
 @onready var dialog: Control = $CanvasLayer/Dialog
-@onready var bgm_player: AudioStreamPlayer = $BGMPlayer
 @onready var transition_overlay: ColorRect = $CanvasLayer/TransitionOverlay
 @onready var background: ColorRect = $Background
 @onready var background_texture: TextureRect = $BackgroundTexture
@@ -16,6 +15,8 @@ signal story_finished
 
 const RENPY_FADE_HALF_DURATION := 0.5
 const STORY_END_FADE_DURATION := 1.0
+const DEFAULT_FACE_SCREEN_POSITION := Vector2(0.5, 0.43)
+const CHARACTER_FACE_TEXTURE_POSITION := Vector2(0.5, 0.24)
 const TITLE_SCENE_PATH := "res://title.tscn"
 # 画像パスは文字列で保持し、欠落ファイルを preload 時の解析エラーにしないようにします。
 const BACKGROUND_TEXTURE_PATHS := {
@@ -25,9 +26,10 @@ const BACKGROUND_TEXTURE_PATHS := {
 	"bg 04": "res://Assets/bg 04.png"
 }
 const CHARACTER_TEXTURE_PATHS := {
-	"character 01 common": "res://Assets/character 01 common.png",
-	"character 01 relaxing": "res://Assets/character 01 relaxing.png",
-	"character 01 surprised": "res://Assets/character 01 surprised.png"
+	"character_common": "res://Assets/character_common.png",
+	"character 01 common": "res://Assets/character_common.png",
+	"character 01 relaxing": "res://Assets/character_common.png",
+	"character 01 surprised": "res://Assets/character_common.png"
 }
 
 var rpy_story_started := false
@@ -39,11 +41,9 @@ var current_character_zoom := 0.0
 
 
 func _ready() -> void:
-	_start_bgm()
 	options.close_requested.connect(_close_options)
 	options.save_requested.connect(_on_save_requested)
 	options.load_requested.connect(_on_load_requested)
-	options.delete_requested.connect(_on_delete_requested)
 	options.update_save_slots(SaveManager.get_slot_summaries())
 	# Signal は Godot のノード間通知機能です。ゲーム側はこの Signal からイベントを受け取れます。
 	story_processor.event_ready.connect(_on_story_event_ready)
@@ -63,15 +63,6 @@ func _ready() -> void:
 				start_rpy_story()
 		else:
 			start_rpy_story()
-
-
-func _start_bgm() -> void:
-	var bgm_stream := bgm_player.stream as AudioStreamOggVorbis
-	if bgm_stream != null:
-		# AudioStreamOggVorbis.loop は Godot のループ設定で、Main 表示中はBGMを繰り返します。
-		bgm_stream.loop = true
-
-	bgm_player.play()
 
 
 func start_rpy_story() -> void:
@@ -208,7 +199,7 @@ func _show_character(command: String, zoom: float) -> void:
 	if image_end >= 0:
 		_set_character_position(command, texture)
 	elif not was_visible:
-		_center_character_at_bottom(texture)
+		_position_character_face_at_default(texture)
 	character_sprite.show()
 	current_character_command = command
 	current_character_zoom = zoom
@@ -246,13 +237,13 @@ func _load_optional_texture(texture_paths: Dictionary, image_name: String, image
 	return null
 
 
-func _center_character_at_bottom(texture: Texture2D) -> void:
+func _position_character_face_at_default(texture: Texture2D) -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
 	var displayed_size := Vector2(texture.get_size()) * character_sprite.scale
-	character_sprite.position = Vector2(
-		(viewport_size.x - displayed_size.x) * 0.5,
-		viewport_size.y - displayed_size.y
-	)
+	var face_offset := displayed_size * CHARACTER_FACE_TEXTURE_POSITION
+	var desired_face_position := viewport_size * DEFAULT_FACE_SCREEN_POSITION
+	# 明示的な Ren'Py Position 指定は変更せず、未指定時だけ顔を画面中央より少し上へ配置します。
+	character_sprite.position = desired_face_position - face_offset
 
 
 func _set_character_position(command: String, texture: Texture2D) -> void:
@@ -375,11 +366,3 @@ func _on_load_requested(slot_index: int) -> void:
 		_close_options()
 	else:
 		options.set_load_status("セーブデータを読み込めませんでした。")
-
-
-func _on_delete_requested(slot_index: int) -> void:
-	if SaveManager.delete_slot(slot_index):
-		options.update_save_slots(SaveManager.get_slot_summaries())
-		options.set_delete_status("スロット%dのデータを削除しました。" % (slot_index + 1))
-	else:
-		options.set_delete_status("削除できませんでした。保存領域を確認してください。")

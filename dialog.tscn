@@ -26,6 +26,15 @@ variation_embolden = 0.8
 [sub_resource type="StyleBoxFlat" id="StyleBox_ActiveButton"]
 bg_color = Color(0.42, 0.1176, 0.188, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_BacklogPanel"]
+bg_color = Color(0, 0, 0, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+anti_aliasing = false
+
 [sub_resource type="Theme" id="Theme_p22n3"]
 default_font = ExtResource("1_font")
 default_font_size = 40
@@ -40,6 +49,69 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_script")
+
+[node name="BacklogPanel" type="PanelContainer" parent="."]
+visible = false
+z_index = 5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 0.66
+offset_left = 64.0
+offset_top = 40.0
+offset_right = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_7g1a8")
+theme_override_styles/panel = SubResource("StyleBox_BacklogPanel")
+
+[node name="BacklogInputBlocker" type="Control" parent="."]
+visible = false
+z_index = 4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BacklogMargin" type="MarginContainer" parent="BacklogPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="BacklogLayout" type="VBoxContainer" parent="BacklogPanel/BacklogMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BacklogHeader" type="HBoxContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout"]
+layout_mode = 2
+
+[node name="BacklogTitle" type="Label" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="BacklogCloseButton" type="Button" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader"]
+custom_minimum_size = Vector2(180, 64)
+layout_mode = 2
+mouse_filter = 0
+text = "閉じる"
+
+[node name="BacklogScroll" type="ScrollContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = false
+horizontal_scroll_mode = 0
+
+[node name="BacklogText" type="RichTextLabel" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+fit_content = true
+bbcode_enabled = false
+scroll_active = false
+selection_enabled = true
+autowrap_mode = 2
 
 [node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=1234509876]
 stream = ExtResource("4_typing_sound")

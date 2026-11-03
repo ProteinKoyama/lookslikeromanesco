@@ -61,19 +61,6 @@ func has_slot(slot_index: int) -> bool:
 	return not _get_record(slot_index).is_empty()
 
 
-func delete_slot(slot_index: int) -> bool:
-	if not _is_valid_slot(slot_index) or not has_slot(slot_index):
-		return false
-
-	var previous_record: Variant = _slots[slot_index]
-	_slots[slot_index] = null
-	if _persist_slots():
-		return true
-
-	_slots[slot_index] = previous_record
-	return false
-
-
 func set_pending_load_slot(slot_index: int) -> void:
 	_pending_load_slot = slot_index if has_slot(slot_index) else -1
 

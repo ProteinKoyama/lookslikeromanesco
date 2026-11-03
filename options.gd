@@ -5,7 +5,6 @@ extends Control
 signal close_requested
 signal save_requested(slot_index: int)
 signal load_requested(slot_index: int)
-signal delete_requested(slot_index: int)
 
 const TITLE_SCENE_PATH := "res://title.tscn"
 
@@ -13,40 +12,25 @@ const TITLE_SCENE_PATH := "res://title.tscn"
 @onready var to_title_button: Button = $"Frame/Margin/Tabs/ゲーム終了/VBoxContainer/ToTitleButton"
 @onready var quit_button:Button = $"Frame/Margin/Tabs/ゲーム終了/VBoxContainer/QuitButton"
 @onready var close_button:Button = $CloseButton
-@onready var bgm_slider: HSlider = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer/BGMSlider
 @onready var se_slider: HSlider = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer/SESlider
-@onready var bgm_label: Label = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer/BGMLabel
 @onready var se_label: Label = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/SoundVBoxContainer/SELabel
 @onready var characters_per_second_slider: HSlider = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/TextVBoxContainer/CharactersPerSecondSlider
 @onready var auto_advance_seconds_slider: HSlider = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/TextVBoxContainer/AutoAdvanceSecondsSlider
 @onready var characters_per_second_label: Label = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/TextVBoxContainer/CharactersPerSecondLabel
 @onready var auto_advance_seconds_label: Label = $Frame/Margin/Tabs/設定/OptionsHBoxContainer/TextVBoxContainer/AutoAdvanceSecondsLabel
 
-var _pending_delete_slot_index := -1
-@onready var delete_confirmation: ConfirmationDialog = $DeleteSlotConfirmation
-
 func _ready() -> void:
 	to_title_button.pressed.connect(_return_to_title)
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	_connect_save_slot_buttons()
-	_connect_delete_slot_buttons()
-	delete_confirmation.confirmed.connect(_confirm_delete_slot)
 	_setup_audio_controls()
 	_setup_text_controls()
 
 
 func _setup_audio_controls() -> void:
-	bgm_slider.value = AudioSettings.bgm_volume_percent
 	se_slider.value = AudioSettings.se_volume_percent
-	_update_bgm_volume(bgm_slider.value)
 	_update_se_volume(se_slider.value)
-	bgm_slider.value_changed.connect(_update_bgm_volume)
 	se_slider.value_changed.connect(_update_se_volume)
-
-
-func _update_bgm_volume(volume_percent: float) -> void:
-	AudioSettings.set_bgm_volume_percent(volume_percent)
-	bgm_label.text = "BGM 音量: %d" % roundi(volume_percent)
 
 
 func _update_se_volume(volume_percent: float) -> void:
@@ -76,37 +60,12 @@ func _connect_save_slot_buttons() -> void:
 		load_button.pressed.connect(_on_load_slot_pressed.bind(slot_index))
 
 
-func _connect_delete_slot_buttons() -> void:
-	for slot_index in range(3):
-		var slot_number := slot_index + 1
-		var delete_button := get_node(
-			"Frame/Margin/Tabs/データ削除/DeleteSlot%dRow/DeleteSlot%dButton" % [slot_number, slot_number]
-		) as Button
-		delete_button.pressed.connect(_on_delete_slot_pressed.bind(slot_index))
-
-
 func _on_save_slot_pressed(slot_index: int) -> void:
 	save_requested.emit(slot_index)
 
 
 func _on_load_slot_pressed(slot_index: int) -> void:
 	load_requested.emit(slot_index)
-
-
-func _on_delete_slot_pressed(slot_index: int) -> void:
-	if not SaveManager.has_slot(slot_index):
-		set_delete_status("このスロットにはセーブデータがありません。")
-		return
-
-	_pending_delete_slot_index = slot_index
-	delete_confirmation.dialog_text = "スロット%dのセーブデータを完全に削除しますか？" % (slot_index + 1)
-	delete_confirmation.popup_centered()
-
-
-func _confirm_delete_slot() -> void:
-	if _pending_delete_slot_index >= 0:
-		delete_requested.emit(_pending_delete_slot_index)
-	_pending_delete_slot_index = -1
 
 
 func _update_characters_per_second(value: float) -> void:
@@ -138,14 +97,10 @@ func update_save_slots(summaries: Array) -> void:
 		var save_label := get_node("Frame/Margin/Tabs/セーブ/SaveSlot%dRow/SaveSlot%dLabel" % [slot_number, slot_number]) as Label
 		var load_label := get_node("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dLabel" % [slot_number, slot_number]) as Label
 		var load_button := get_node("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dButton" % [slot_number, slot_number]) as Button
-		var delete_label := get_node("Frame/Margin/Tabs/データ削除/DeleteSlot%dRow/DeleteSlot%dLabel" % [slot_number, slot_number]) as Label
-		var delete_button := get_node("Frame/Margin/Tabs/データ削除/DeleteSlot%dRow/DeleteSlot%dButton" % [slot_number, slot_number]) as Button
 		if not is_occupied:
 			save_label.text = "スロット%d: 空き" % slot_number
 			load_label.text = save_label.text
-			delete_label.text = save_label.text
 			load_button.disabled = true
-			delete_button.disabled = true
 			continue
 
 		var slot_description := "スロット%d\n%s\n%s" % [
@@ -155,9 +110,7 @@ func update_save_slots(summaries: Array) -> void:
 		]
 		save_label.text = slot_description
 		load_label.text = slot_description
-		delete_label.text = slot_description
 		load_button.disabled = false
-		delete_button.disabled = false
 
 
 func set_save_status(message: String) -> void:
@@ -168,15 +121,10 @@ func set_load_status(message: String) -> void:
 	$Frame/Margin/Tabs/ロード/LoadStatusLabel.text = message
 
 
-func set_delete_status(message: String) -> void:
-	$Frame/Margin/Tabs/データ削除/DeleteStatusLabel.text = message
-
-
 func open_from_title(tab_name: String) -> void:
 	# タイトル画面から開く場合は、ゲーム中専用のタブを隠します。
 	_hide_tab_by_name("セーブ")
 	_hide_tab_by_name("ゲーム終了")
-	_hide_tab_by_name("データ削除")
 
 	var requested_tab_index := _find_tab_index(tab_name)
 	if requested_tab_index >= 0:

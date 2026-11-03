@@ -83,6 +83,8 @@ python:
     character_name = character_name.strip()
     if not character_name:
         character_name = "%s"
+if character_name == "ロマ子":
+    c "あなたは……私のことを知ってるの？"
 if character_name != "%s":
     c "じゃあ私の名前は今から[character_name]だね！"
 else :
@@ -429,19 +431,19 @@ if q1_general_flag+q2_general_flag+q3_general_flag == 0:
     c "曖昧な存在でいたいな。"
     c "そういえば、私の好きな食べ物を思い出したよ。"
     c "ロマネスコ。食べたことはないんだけどね。"
-    show character 01 surprised
+    show character 01 surprised at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
     c "…"
     c "なんだか、用意された以上のことを話しちゃったかも。"
-    show character 01 relaxing
+    show character 01 relaxing at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
     c "あなたが聞いてくれたおかげかもね。"
-    show character 01 common
+    show character 01 common at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
     c "もしかしたら私が何を考えているかわかってたりして！"
 
 label end:
     c "なんだか疲れちゃった。\n今日のおしゃべりはここまで。"
     c "また話せたらいいな。"
     if q1_general_flag+q2_general_flag+q3_general_flag == 0:
-        show character 01 relaxing
+        show character 01 relaxing at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
         c "さようなら。楽しかったよ。"
 return
 

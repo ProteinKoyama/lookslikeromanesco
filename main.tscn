@@ -4,15 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://4ld7q74ale8v" path="res://options.tscn" id="2_options"]
 [ext_resource type="Script" uid="uid://b38ku4jyx2lb0" path="res://main.gd" id="3_main"]
 [ext_resource type="Script" path="res://renpy_story_processor.gd" id="4_story_processor"]
-[ext_resource type="AudioStream" path="res://Assets/MusMus-BGM-179.ogg" id="5_bgm"]
 
 [node name="Main" type="Node2D" unique_id=469165126]
 script = ExtResource("3_main")
-
-[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_bgm")
-volume_db = 0.0
-bus = "BGM"
 
 [node name="Background" type="ColorRect" parent="." unique_id=990809186]
 offset_right = 1935.0

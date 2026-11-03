@@ -25,8 +25,14 @@ const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{0,10}$"
 @onready var text_input_submit_button: Button = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/SubmitButton
 @onready var text_input_validation_label: Label = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/ValidationLabel
 @onready var typing_sound: AudioStreamPlayer = $TypingSound
+@onready var backlog_panel: PanelContainer = $BacklogPanel
+@onready var backlog_input_blocker: Control = $BacklogInputBlocker
+@onready var backlog_close_button: Button = $BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader/BacklogCloseButton
+@onready var backlog_scroll: ScrollContainer = $BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll
+@onready var backlog_text: RichTextLabel = $BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll/BacklogText
 
 var options_menu: Control
+var backlog_entries: Array[String] = []
 var choice_entries: Array[Dictionary] = []
 var choice_buttons: Array[Button] = []
 var _pending_story_choices: Array = []
@@ -41,6 +47,7 @@ func _ready() -> void:
 	setting_button.pressed.connect(_on_setting_button_pressed)
 	text_input_submit_button.pressed.connect(_submit_text_input)
 	name_line_edit.text_submitted.connect(_on_name_line_edit_text_submitted)
+	$BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader/BacklogCloseButton.pressed.connect(_close_backlog)
 	# Main の静的 Options ノードを取得し、可視状態をボタン表示へ反映します。
 	var main_node := get_tree().current_scene
 	if main_node != null:
@@ -50,9 +57,37 @@ func _ready() -> void:
 		_sync_setting_button_state()
 
 
+func _input(event: InputEvent) -> void:
+	# _input は GUI コントロールより先に呼ばれるため、選択肢表示中もホイール操作を受け取れます。
+	if not visible or (options_menu != null and options_menu.visible):
+		return
+	if event is InputEventMouseButton and event.pressed:
+		if backlog_panel.visible and event.button_index == MOUSE_BUTTON_LEFT:
+			var mouse_position := get_global_mouse_position()
+			var clicked_close_button := backlog_close_button.get_global_rect().has_point(mouse_position)
+			var clicked_outside_panel := not backlog_panel.get_global_rect().has_point(mouse_position)
+			if clicked_close_button or clicked_outside_panel:
+				_close_backlog()
+				get_viewport().set_input_as_handled()
+				return
+
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			backlog_input_blocker.show()
+			backlog_panel.show()
+			call_deferred("_scroll_backlog_to_latest")
+			get_viewport().set_input_as_handled()
+		elif (
+			event.button_index == MOUSE_BUTTON_WHEEL_DOWN
+			and backlog_panel.visible
+			and not backlog_panel.get_global_rect().has_point(get_global_mouse_position())
+		):
+			_close_backlog()
+			get_viewport().set_input_as_handled()
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	# _unhandled_input は GUI が処理しなかった入力を受け取り、会話送りに使います。
-	if choice_scroll_container.visible:
+	# _unhandled_input は GUI が処理しなかった入力を会話送りに使います。
+	if choice_scroll_container.visible or backlog_panel.visible:
 		return
 
 	if _is_advance_input(event):
@@ -101,6 +136,7 @@ func show_choices(choices: Array) -> void:
 func present_story_text(speaker: String, text: String, choices: Array = []) -> void:
 	hide_choices()
 	speaker_label.text = speaker
+	_record_backlog_entry(speaker, text)
 	_pending_story_choices = choices.duplicate(true)
 	_start_typing(text)
 	show()
@@ -111,6 +147,16 @@ func present_menu(prompt: String, choices: Array) -> void:
 	hide_choices()
 	speaker_label.text = ""
 	_pending_story_choices.clear()
+	var menu_history_lines := PackedStringArray()
+	if not prompt.is_empty():
+		menu_history_lines.append(prompt)
+	for choice_value: Variant in choices:
+		if choice_value is Dictionary:
+			menu_history_lines.append("・" + str(choice_value.get("text", "")))
+		elif choice_value is String:
+			menu_history_lines.append("・" + choice_value)
+	if not menu_history_lines.is_empty():
+		_record_backlog_entry("", "\n".join(menu_history_lines))
 	_start_typing(prompt)
 	show_choices(choices)
 	show()
@@ -124,6 +170,23 @@ func hide_choices() -> void:
 
 	for button: Button in choice_buttons:
 		button.hide()
+
+
+func _record_backlog_entry(speaker: String, text: String) -> void:
+	var entry := text if speaker.is_empty() else "%s\n%s" % [speaker, text]
+	backlog_entries.append(entry)
+	backlog_text.text = "\n\n".join(backlog_entries)
+	if backlog_panel.visible:
+		call_deferred("_scroll_backlog_to_latest")
+
+
+func _scroll_backlog_to_latest() -> void:
+	backlog_scroll.scroll_vertical = int(backlog_scroll.get_v_scroll_bar().max_value)
+
+
+func _close_backlog() -> void:
+	backlog_panel.hide()
+	backlog_input_blocker.hide()
 
 
 func show_text_input(prompt: String, max_length: int = DEFAULT_NAME_INPUT_LENGTH) -> void:
