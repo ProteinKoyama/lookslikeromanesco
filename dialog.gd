@@ -24,6 +24,7 @@ const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{0,10}$"
 @onready var name_line_edit: LineEdit = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/NameLineEdit
 @onready var text_input_submit_button: Button = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/SubmitButton
 @onready var text_input_validation_label: Label = $ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer/ValidationLabel
+@onready var typing_sound: AudioStreamPlayer = $TypingSound
 
 var options_menu: Control
 var choice_entries: Array[Dictionary] = []
@@ -216,6 +217,8 @@ func _start_typing(text: String) -> void:
 		if current_generation != typing_generation:
 			return
 		dialogue_label.visible_characters = character_index
+		# AudioStreamPlayer は Godot の再生ノードです。各文字の表示ごとに待たずにSEを重ねて再生します。
+		typing_sound.play()
 
 	is_typing = false
 	_show_current_dialogue_choices()

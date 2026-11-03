@@ -6,6 +6,7 @@ signal story_event_received(event: Dictionary)
 signal story_finished
 
 @onready var dialog: Control = $CanvasLayer/Dialog
+@onready var bgm_player: AudioStreamPlayer = $BGMPlayer
 @onready var transition_overlay: ColorRect = $CanvasLayer/TransitionOverlay
 @onready var background: ColorRect = $Background
 @onready var background_texture: TextureRect = $BackgroundTexture
@@ -31,10 +32,19 @@ const CHARACTER_TEXTURE_PATHS := {
 
 var rpy_story_started := false
 var is_returning_to_title := false
+var pending_visual_commands: Array[Dictionary] = []
+var current_background_name := "black"
+var current_character_command := ""
+var current_character_zoom := 0.0
 
 
 func _ready() -> void:
+	_start_bgm()
 	options.close_requested.connect(_close_options)
+	options.save_requested.connect(_on_save_requested)
+	options.load_requested.connect(_on_load_requested)
+	options.delete_requested.connect(_on_delete_requested)
+	options.update_save_slots(SaveManager.get_slot_summaries())
 	# Signal は Godot のノード間通知機能です。ゲーム側はこの Signal からイベントを受け取れます。
 	story_processor.event_ready.connect(_on_story_event_ready)
 	story_processor.story_finished.connect(_on_story_finished)
@@ -43,7 +53,25 @@ func _ready() -> void:
 	dialog.text_input_submitted.connect(_on_dialog_text_input_submitted)
 	dialog.options_toggle_requested.connect(_toggle_options)
 	if story_processor.load_story():
-		start_rpy_story()
+		var pending_slot := SaveManager.take_pending_load_slot()
+		if pending_slot >= 0:
+			var pending_save := SaveManager.load_slot(pending_slot)
+			if story_processor.restore_save_data(pending_save):
+				_restore_saved_visual_state(pending_save)
+				rpy_story_started = true
+			else:
+				start_rpy_story()
+		else:
+			start_rpy_story()
+
+
+func _start_bgm() -> void:
+	var bgm_stream := bgm_player.stream as AudioStreamOggVorbis
+	if bgm_stream != null:
+		# AudioStreamOggVorbis.loop は Godot のループ設定で、Main 表示中はBGMを繰り返します。
+		bgm_stream.loop = true
+
+	bgm_player.play()
 
 
 func start_rpy_story() -> void:
@@ -81,6 +109,9 @@ func _close_options() -> void:
 func _on_story_event_ready(event: Dictionary) -> void:
 	var event_type := str(event.get("type", ""))
 	var choices_value: Variant = event.get("choices", [])
+	if event_type != "visual_command":
+		_apply_pending_visual_commands()
+
 	if event_type == "dialogue":
 		var choices: Array = []
 		var speaker_value: Variant = event.get("speaker")
@@ -111,23 +142,36 @@ func _on_story_event_ready(event: Dictionary) -> void:
 
 	story_event_received.emit(event)
 	if event_type == "visual_command":
-		await _apply_visual_command(event)
+		var command := str(event.get("command", ""))
+		if command == "with fade":
+			await _play_fade_transition()
+		else:
+			pending_visual_commands.append(event.duplicate(true))
 		continue_rpy_story()
 
 
 func _apply_visual_command(event: Dictionary) -> void:
 	var command := str(event.get("command", ""))
-	if command == "with fade":
-		await _play_fade_transition()
-	elif command.begins_with("scene "):
+	if command.begins_with("scene "):
 		_show_background(command.trim_prefix("scene ").strip_edges())
 	elif command.begins_with("show "):
 		_show_character(command, float(event.get("zoom", 0.0)))
 	elif command.begins_with("hide ") and command.trim_prefix("hide ").begins_with("character"):
 		character_sprite.hide()
+		current_character_command = ""
+		current_character_zoom = 0.0
+
+
+func _apply_pending_visual_commands() -> void:
+	for visual_command in pending_visual_commands:
+		_apply_visual_command(visual_command)
+	pending_visual_commands.clear()
 
 
 func _show_background(image_name: String) -> void:
+	current_background_name = image_name
+	current_character_command = ""
+	current_character_zoom = 0.0
 	character_sprite.hide()
 	background_texture.hide()
 	background.color = Color.BLACK
@@ -152,6 +196,8 @@ func _show_character(command: String, zoom: float) -> void:
 	var texture := _load_optional_texture(CHARACTER_TEXTURE_PATHS, image_name, "キャラクター")
 	if texture == null:
 		character_sprite.hide()
+		current_character_command = ""
+		current_character_zoom = 0.0
 		return
 
 	var was_visible := character_sprite.visible
@@ -164,6 +210,20 @@ func _show_character(command: String, zoom: float) -> void:
 	elif not was_visible:
 		_center_character_at_bottom(texture)
 	character_sprite.show()
+	current_character_command = command
+	current_character_zoom = zoom
+
+
+func _restore_saved_visual_state(save_data: Dictionary) -> void:
+	var visual_state: Variant = save_data.get("visual_state", {})
+	if not visual_state is Dictionary:
+		return
+	var background_name := str(visual_state.get("background", ""))
+	if not background_name.is_empty():
+		_show_background(background_name)
+	var character_command := str(visual_state.get("character_command", ""))
+	if not character_command.is_empty():
+		_show_character(character_command, float(visual_state.get("character_zoom", 0.0)))
 
 
 func _load_optional_texture(texture_paths: Dictionary, image_name: String, image_type: String) -> Texture2D:
@@ -231,6 +291,9 @@ func _play_fade_transition() -> void:
 	)
 	await fade_to_black.finished
 
+	# 画面が黒くなってから保留中の scene/show/hide を反映し、切替直後の一瞬の露出を防ぎます。
+	_apply_pending_visual_commands()
+
 	var fade_from_black: Tween = create_tween()
 	fade_from_black.tween_property(
 		transition_overlay,
@@ -281,3 +344,42 @@ func _on_dialog_choice_selected(choice_index: int, _choice: Dictionary) -> void:
 func _on_dialog_text_input_submitted(value: String) -> void:
 	if not story_processor.submit_text_input(value):
 		dialog.call("show_text_input_error")
+
+
+func _on_save_requested(slot_index: int) -> void:
+	var save_data := story_processor.create_save_data()
+	if save_data.is_empty():
+		options.set_save_status("現在の表示状態ではセーブできません。")
+		return
+	save_data["visual_state"] = {
+		"background": current_background_name,
+		"character_command": current_character_command,
+		"character_zoom": current_character_zoom
+	}
+
+	if SaveManager.save_slot(slot_index, save_data):
+		options.update_save_slots(SaveManager.get_slot_summaries())
+		options.set_save_status("スロット%dに保存しました。" % (slot_index + 1))
+	else:
+		options.set_save_status("保存できませんでした。ブラウザの保存領域を確認してください。")
+
+
+func _on_load_requested(slot_index: int) -> void:
+	var save_data := SaveManager.load_slot(slot_index)
+	if save_data.is_empty():
+		options.set_load_status("このスロットにはセーブデータがありません。")
+		return
+
+	if story_processor.restore_save_data(save_data):
+		_restore_saved_visual_state(save_data)
+		_close_options()
+	else:
+		options.set_load_status("セーブデータを読み込めませんでした。")
+
+
+func _on_delete_requested(slot_index: int) -> void:
+	if SaveManager.delete_slot(slot_index):
+		options.update_save_slots(SaveManager.get_slot_summaries())
+		options.set_delete_status("スロット%dのデータを削除しました。" % (slot_index + 1))
+	else:
+		options.set_delete_status("削除できませんでした。保存領域を確認してください。")

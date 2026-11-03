@@ -26,6 +26,7 @@ func _ready() -> void:
 	setting_button.pressed.connect(_on_setting_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
 	options_popup.close_requested.connect(_close_options_popup)
+	options_popup.load_requested.connect(_on_load_requested)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -65,8 +66,21 @@ func _on_setting_button_pressed() -> void:
 
 
 func _open_options_tab(tab_name: String) -> void:
+	options_popup.update_save_slots(SaveManager.get_slot_summaries())
 	options_popup.open_from_title(tab_name)
 	options_popup.show_popup()
+
+
+func _on_load_requested(slot_index: int) -> void:
+	if not SaveManager.has_slot(slot_index):
+		options_popup.set_load_status("このスロットにはセーブデータがありません。")
+		return
+
+	SaveManager.set_pending_load_slot(slot_index)
+	var result: Error = get_tree().change_scene_to_file(MAIN_SCENE_PATH)
+	if result != OK:
+		SaveManager.take_pending_load_slot()
+		push_error("セーブデータを読み込むための Main シーンへ移動できません: %s" % MAIN_SCENE_PATH)
 
 
 func _close_options_popup() -> void:

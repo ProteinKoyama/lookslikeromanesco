@@ -23,6 +23,7 @@ var _pending_input_variable := ""
 var _waiting_for_response := false
 var _call_stack: Array[int] = []
 var _random := RandomNumberGenerator.new()
+var _current_event: Dictionary = {}
 
 
 func load_story(file_path: String = STORY_FILE_PATH) -> bool:
@@ -73,6 +74,7 @@ func start_story() -> void:
 	_pending_input_variable = ""
 	_call_stack.clear()
 	_waiting_for_response = false
+	_current_event.clear()
 	# RandomNumberGenerator は Godot API です。Ren'Py の random.choice/randint に使います。
 	_random.randomize()
 	_program_counter = int(_label_program_indices["start"])
@@ -84,6 +86,7 @@ func continue_story() -> void:
 		return
 
 	_waiting_for_response = false
+	_current_event.clear()
 	_run_until_event()
 
 
@@ -97,6 +100,7 @@ func select_choice(choice_index: int) -> void:
 	_program_counter = _pending_choice_targets[choice_index]
 	_pending_choice_targets.clear()
 	_waiting_for_response = false
+	_current_event.clear()
 	_run_until_event()
 
 
@@ -111,7 +115,68 @@ func submit_text_input(value: String) -> bool:
 	_story_variables[_pending_input_variable] = accepted_value
 	_pending_input_variable = ""
 	_waiting_for_response = false
+	_current_event.clear()
 	_run_until_event()
+	return true
+
+
+func create_save_data() -> Dictionary:
+	if not _waiting_for_response:
+		return {}
+	var event_type := str(_current_event.get("type", ""))
+	if event_type not in ["dialogue", "menu", "text_input"]:
+		return {}
+
+	return {
+		"format_version": 1,
+		"program_counter": _program_counter,
+		"story_variables": _story_variables.duplicate(true),
+		"call_stack": _call_stack.duplicate(),
+		"pending_choice_targets": _pending_choice_targets.duplicate(),
+		"pending_input_variable": _pending_input_variable,
+		"random_state": _random.state,
+		"current_event": _current_event.duplicate(true)
+	}
+
+
+func restore_save_data(save_data: Dictionary) -> bool:
+	if int(save_data.get("format_version", 0)) != 1:
+		push_warning("このセーブデータ形式には対応していません。")
+		return false
+
+	var saved_program_counter := int(save_data.get("program_counter", -1))
+	var variables_value: Variant = save_data.get("story_variables")
+	var call_stack_value: Variant = save_data.get("call_stack")
+	var choice_targets_value: Variant = save_data.get("pending_choice_targets")
+	var event_value: Variant = save_data.get("current_event")
+	if saved_program_counter < 0 or saved_program_counter > _program.size():
+		push_warning("セーブデータのシナリオ位置が正しくありません。")
+		return false
+	if not variables_value is Dictionary or not call_stack_value is Array:
+		push_warning("セーブデータのシナリオ状態が正しくありません。")
+		return false
+	if not choice_targets_value is Array or not event_value is Dictionary:
+		push_warning("セーブデータの入力状態が正しくありません。")
+		return false
+	var event_type := str(event_value.get("type", ""))
+	if event_type not in ["dialogue", "menu", "text_input"]:
+		push_warning("セーブデータに再開可能な表示内容がありません。")
+		return false
+
+	_program_counter = saved_program_counter
+	_story_variables = variables_value.duplicate(true)
+	_call_stack.clear()
+	for stack_value: Variant in call_stack_value:
+		_call_stack.append(int(stack_value))
+	_pending_choice_targets.clear()
+	for target_value: Variant in choice_targets_value:
+		_pending_choice_targets.append(int(target_value))
+	_pending_input_variable = str(save_data.get("pending_input_variable", ""))
+	_random.state = int(save_data.get("random_state", _random.state))
+	_waiting_for_response = true
+	_current_event = event_value.duplicate(true)
+	# ロード時は保存した表示イベントを再送し、Dialog に現在行と入力 UI を復元します。
+	event_ready.emit(_current_event.duplicate(true))
 	return true
 
 
@@ -667,8 +732,7 @@ func _run_until_event() -> void:
 				_program_counter = int(_call_stack.pop_back())
 				continue
 			"dialogue":
-				_waiting_for_response = true
-				event_ready.emit({
+				_publish_waiting_event({
 					"type": "dialogue",
 					"speaker": _resolve_speaker(str(instruction.speaker)),
 					"text": _interpolate_text(str(instruction.text)),
@@ -682,8 +746,7 @@ func _run_until_event() -> void:
 			"text_input":
 				var input_statement: Dictionary = instruction.statement
 				_pending_input_variable = str(input_statement.target)
-				_waiting_for_response = true
-				event_ready.emit({
+				_publish_waiting_event({
 					"type": "text_input",
 					"prompt": _interpolate_text(str(input_statement.prompt)),
 					"max_length": int(input_statement.max_length),
@@ -691,8 +754,7 @@ func _run_until_event() -> void:
 				})
 				return
 			"visual":
-				_waiting_for_response = true
-				event_ready.emit({
+				_publish_waiting_event({
 					"type": "visual_command",
 					"command": str(instruction.command),
 					"zoom": float(instruction.zoom),
@@ -723,18 +785,23 @@ func _present_menu(instruction: Dictionary) -> bool:
 		_program_counter = int(instruction.end_pc)
 		return false
 
-	_waiting_for_response = true
 	var prompt := _interpolate_text(str(instruction.prompt))
 	if prompt.is_empty():
-		event_ready.emit({"type": "menu", "choices": visible_choices, "source_line": int(instruction.line)})
+		_publish_waiting_event({"type": "menu", "choices": visible_choices, "source_line": int(instruction.line)})
 	else:
-		event_ready.emit({
+		_publish_waiting_event({
 			"type": "menu",
 			"prompt": prompt,
 			"choices": visible_choices,
 			"source_line": int(instruction.line)
 		})
 	return true
+
+
+func _publish_waiting_event(event: Dictionary) -> void:
+	_waiting_for_response = true
+	_current_event = event.duplicate(true)
+	event_ready.emit(_current_event.duplicate(true))
 
 
 func _jump_to_label(label_name: String) -> bool:

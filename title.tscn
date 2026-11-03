@@ -85,6 +85,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_MainPanel")
 [node name="TitleLabel" type="Label" parent="TitlePanel" unique_id=620296908]
 layout_mode = 2
 theme = SubResource("Theme_Title")
+theme_override_colors/font_color = Color(0.42, 0.1176, 0.18816, 1) # AGENTS.md のサブカラー HSV(346, 72, 42) をRGBに変換
 text = "Look likes
 Romanesco"
 

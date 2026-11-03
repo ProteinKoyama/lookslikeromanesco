@@ -3,6 +3,7 @@
 [ext_resource type="FontFile" uid="uid://qtcnac1rawvo" path="res://Assets/x12y16pxMaruMonica.ttf" id="1_font"]
 [ext_resource type="Script" uid="uid://b80egewq4rxif" path="res://dialog.gd" id="2_script"]
 [ext_resource type="StyleBox" path="res://Assets/StyleBox_ButtonHover.tres" id="3_button_hover"]
+[ext_resource type="AudioStream" path="res://Assets/se_talk.mp3" id="4_typing_sound"]
 
 [sub_resource type="Theme" id="Theme_7g1a8"]
 default_font = ExtResource("1_font")
@@ -39,6 +40,12 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_script")
+
+[node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=1234509876]
+stream = ExtResource("4_typing_sound")
+volume_db = 0.0
+bus = "SE"
+max_polyphony = 16
 
 [node name="ChoiceScrollContainer" type="ScrollContainer" parent="." unique_id=1864057550]
 visible = false
