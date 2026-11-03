@@ -26,10 +26,10 @@ const BACKGROUND_TEXTURE_PATHS := {
 	"bg 04": "res://Assets/bg 04.png"
 }
 const CHARACTER_TEXTURE_PATHS := {
-	"character_common": "res://Assets/character_common.png",
 	"character 01 common": "res://Assets/character_common.png",
-	"character 01 relaxing": "res://Assets/character_common.png",
-	"character 01 surprised": "res://Assets/character_common.png"
+	"character 01 away": "res://Assets/character_away.png",
+	"character 01 smile": "res://Assets/character_smile.png",
+	"character 01 surprise": "res://Assets/character_surprise.png"
 }
 
 var rpy_story_started := false
@@ -63,6 +63,13 @@ func _ready() -> void:
 				start_rpy_story()
 		else:
 			start_rpy_story()
+	else:
+		# Web版でも読み込み失敗の理由をゲーム画面に表示し、コンソールだけに隠しません。
+		dialog.call(
+			"present_story_text",
+			"",
+			"シナリオを読み込めませんでした。\n%s" % story_processor.last_load_error
+		)
 
 
 func start_rpy_story() -> void:
@@ -224,12 +231,12 @@ func _load_optional_texture(texture_paths: Dictionary, image_name: String, image
 		return null
 
 	var texture_path := str(path_value)
-	# FileAccess と ResourceLoader は Godot API です。画像が欠落しても警告に留めてシナリオを続けます。
-	if not FileAccess.file_exists(texture_path):
+	# ResourceLoader は Godot API で、Web書き出し時の PNG から .ctex への変換参照も解決します。
+	if not ResourceLoader.exists(texture_path, "Texture2D"):
 		push_warning("%s画像が見つかりません。画像表示を省略します: %s" % [image_type, texture_path])
 		return null
 
-	var loaded_resource: Resource = ResourceLoader.load(texture_path)
+	var loaded_resource: Resource = ResourceLoader.load(texture_path, "Texture2D")
 	if loaded_resource is Texture2D:
 		return loaded_resource as Texture2D
 

@@ -12,6 +12,7 @@ const SAFE_NAME_PATTERN := "^[\\p{L}\\p{M}\\p{N} _　ー・-]{0,10}$"
 var _tokens: Array[Dictionary] = []
 var _parse_index := 0
 var _parse_error := ""
+var last_load_error := ""
 var _program: Array[Dictionary] = []
 var _program_counter := 0
 var _label_program_indices: Dictionary = {}
@@ -27,25 +28,30 @@ var _current_event: Dictionary = {}
 
 
 func load_story(file_path: String = STORY_FILE_PATH) -> bool:
+	last_load_error = ""
 	# FileAccess は Godot の組み込み API で、プロジェクト内の script.rpy を読み込みます。
 	var file := FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
-		push_error("Ren'Py シナリオを開けません: %s" % file_path)
+		last_load_error = "Ren'Py シナリオを開けません: %s" % file_path
+		push_error(last_load_error)
 		return false
 
 	_tokens.clear()
 	_parse_index = 0
 	_parse_error = ""
 	if not _tokenize_source(file.get_as_text().trim_prefix("\uFEFF")):
+		last_load_error = _parse_error
 		return false
 
 	var root_nodes := _parse_block(0)
 	if not _parse_error.is_empty():
-		push_error(_parse_error)
+		last_load_error = _parse_error
+		push_error(last_load_error)
 		return false
 	if _parse_index < _tokens.size():
 		var unexpected: Dictionary = _tokens[_parse_index]
-		push_error("未対応のインデントです (%d行): %s" % [unexpected.line, unexpected.text])
+		last_load_error = "未対応のインデントです (%d行): %s" % [unexpected.line, unexpected.text]
+		push_error(last_load_error)
 		return false
 
 	_default_variables.clear()
@@ -55,10 +61,12 @@ func load_story(file_path: String = STORY_FILE_PATH) -> bool:
 	_collect_declarations(root_nodes)
 	_compile_nodes(root_nodes)
 	if not _parse_error.is_empty():
-		push_error(_parse_error)
+		last_load_error = _parse_error
+		push_error(last_load_error)
 		return false
 	if not _label_program_indices.has("start"):
-		push_error("script.rpy に label start がありません。")
+		last_load_error = "script.rpy に label start がありません。"
+		push_error(last_load_error)
 		return false
 	return true
 

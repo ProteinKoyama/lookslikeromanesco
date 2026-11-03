@@ -3,12 +3,21 @@
 [ext_resource type="FontFile" uid="uid://qtcnac1rawvo" path="res://Assets/x12y16pxMaruMonica.ttf" id="1_font"]
 [ext_resource type="Script" uid="uid://b80egewq4rxif" path="res://dialog.gd" id="2_script"]
 [ext_resource type="StyleBox" path="res://Assets/StyleBox_ButtonHover.tres" id="3_button_hover"]
-[ext_resource type="AudioStream" path="res://Assets/se_talk.mp3" id="4_typing_sound"]
+[ext_resource type="AudioStream" uid="uid://dynjfsuac5oj2" path="res://Assets/se_talk.mp3" id="4_typing_sound"]
 
 [sub_resource type="Theme" id="Theme_7g1a8"]
 default_font = ExtResource("1_font")
 default_font_size = 40
 Button/styles/hover = ExtResource("3_button_hover")
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_BacklogPanel"]
+bg_color = Color(0, 0, 0, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+anti_aliasing = false
 
 [sub_resource type="Theme" id="Theme_Choices"]
 default_font = ExtResource("1_font")
@@ -19,21 +28,8 @@ Button/styles/hover = ExtResource("3_button_hover")
 default_font = ExtResource("1_font")
 default_font_size = 50
 
-[sub_resource type="FontVariation" id="FontVariation_SpeakerBold"]
-base_font = ExtResource("1_font")
-variation_embolden = 0.8
-
 [sub_resource type="StyleBoxFlat" id="StyleBox_ActiveButton"]
 bg_color = Color(0.42, 0.1176, 0.188, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_BacklogPanel"]
-bg_color = Color(0, 0, 0, 0.96)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(1, 1, 1, 1)
-anti_aliasing = false
 
 [sub_resource type="Theme" id="Theme_p22n3"]
 default_font = ExtResource("1_font")
@@ -50,10 +46,10 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_script")
 
-[node name="BacklogPanel" type="PanelContainer" parent="."]
+[node name="BacklogPanel" type="PanelContainer" parent="." unique_id=626862180]
 visible = false
 z_index = 5
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 0.66
 offset_left = 64.0
@@ -64,60 +60,56 @@ grow_vertical = 2
 theme = SubResource("Theme_7g1a8")
 theme_override_styles/panel = SubResource("StyleBox_BacklogPanel")
 
-[node name="BacklogInputBlocker" type="Control" parent="."]
-visible = false
-z_index = 4
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="BacklogMargin" type="MarginContainer" parent="BacklogPanel"]
+[node name="BacklogMargin" type="MarginContainer" parent="BacklogPanel" unique_id=1103797983]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 16
 
-[node name="BacklogLayout" type="VBoxContainer" parent="BacklogPanel/BacklogMargin"]
+[node name="BacklogLayout" type="VBoxContainer" parent="BacklogPanel/BacklogMargin" unique_id=362166549]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="BacklogHeader" type="HBoxContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout"]
+[node name="BacklogHeader" type="HBoxContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout" unique_id=35543229]
 layout_mode = 2
 
-[node name="BacklogTitle" type="Label" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader"]
+[node name="BacklogTitle" type="Label" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader" unique_id=196089838]
 layout_mode = 2
 size_flags_horizontal = 3
-text = ""
 
-[node name="BacklogCloseButton" type="Button" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader"]
+[node name="BacklogCloseButton" type="Button" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogHeader" unique_id=1814128050]
 custom_minimum_size = Vector2(180, 64)
 layout_mode = 2
-mouse_filter = 0
 text = "閉じる"
 
-[node name="BacklogScroll" type="ScrollContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout"]
+[node name="BacklogScroll" type="ScrollContainer" parent="BacklogPanel/BacklogMargin/BacklogLayout" unique_id=400948961]
 layout_mode = 2
 size_flags_vertical = 3
-follow_focus = false
 horizontal_scroll_mode = 0
 
-[node name="BacklogText" type="RichTextLabel" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll"]
+[node name="BacklogText" type="RichTextLabel" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll" unique_id=671474553]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 fit_content = true
-bbcode_enabled = false
 scroll_active = false
-selection_enabled = true
 autowrap_mode = 2
+selection_enabled = true
+
+[node name="BacklogInputBlocker" type="Control" parent="." unique_id=1904439662]
+visible = false
+z_index = 4
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TypingSound" type="AudioStreamPlayer" parent="." unique_id=1234509876]
 stream = ExtResource("4_typing_sound")
-volume_db = 0.0
-bus = "SE"
 max_polyphony = 16
+bus = &"SE"
 
 [node name="ChoiceScrollContainer" type="ScrollContainer" parent="." unique_id=1864057550]
 visible = false
@@ -147,29 +139,29 @@ size_flags_horizontal = 3
 theme = SubResource("Theme_Choices")
 theme_override_constants/separation = 12
 
-[node name="TextInputVBoxContainer" type="VBoxContainer" parent="ChoiceScrollContainer/ChoiceCenterContainer"]
+[node name="TextInputVBoxContainer" type="VBoxContainer" parent="ChoiceScrollContainer/ChoiceCenterContainer" unique_id=177497779]
 visible = false
 custom_minimum_size = Vector2(960, 0)
 layout_mode = 2
 theme = SubResource("Theme_Choices")
 theme_override_constants/separation = 12
 
-[node name="PromptLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+[node name="PromptLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer" unique_id=1814897043]
 layout_mode = 2
 autowrap_mode = 2
 
-[node name="NameLineEdit" type="LineEdit" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+[node name="NameLineEdit" type="LineEdit" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer" unique_id=832987825]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SubmitButton" type="Button" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+[node name="SubmitButton" type="Button" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer" unique_id=1062036488]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "決定"
 
-[node name="ValidationLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer"]
+[node name="ValidationLabel" type="Label" parent="ChoiceScrollContainer/ChoiceCenterContainer/TextInputVBoxContainer" unique_id=619708657]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.1176, 0.188, 1)
@@ -204,8 +196,7 @@ theme_override_constants/separation = 10
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme = SubResource("Theme_Dialogue")
-theme_override_colors/font_color = Color(0.42, 0.1176, 0.188, 1) # AGENTS.md のサブカラー HSV(346, 72, 42)
-theme_override_fonts/font = SubResource("FontVariation_SpeakerBold")
+theme_override_colors/font_color = Color(0.42, 0.1176, 0.188, 1)
 theme_override_font_sizes/font_size = 56
 text = "案内人"
 
@@ -215,7 +206,7 @@ size_flags_vertical = 3
 theme = SubResource("Theme_Dialogue")
 theme_override_colors/font_color = Color(0.94, 0.97, 1, 1)
 text = "会話データを読み込み中です。"
-autowrap_mode = 2
+autowrap_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="DialoguePanel/Margin/Layout" unique_id=1157743919]
 layout_mode = 2

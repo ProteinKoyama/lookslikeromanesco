@@ -50,14 +50,16 @@ func _setup_text_controls() -> void:
 func _connect_save_slot_buttons() -> void:
 	for slot_index in range(3):
 		var slot_number := slot_index + 1
-		var save_button := get_node(
+		var save_button := get_node_or_null(
 			"Frame/Margin/Tabs/セーブ/SaveSlot%dRow/SaveSlot%dButton" % [slot_number, slot_number]
 		) as Button
-		var load_button := get_node(
+		var load_button := get_node_or_null(
 			"Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dButton" % [slot_number, slot_number]
 		) as Button
-		save_button.pressed.connect(_on_save_slot_pressed.bind(slot_index))
-		load_button.pressed.connect(_on_load_slot_pressed.bind(slot_index))
+		if save_button != null:
+			save_button.pressed.connect(_on_save_slot_pressed.bind(slot_index))
+		if load_button != null:
+			load_button.pressed.connect(_on_load_slot_pressed.bind(slot_index))
 
 
 func _on_save_slot_pressed(slot_index: int) -> void:
@@ -94,13 +96,17 @@ func update_save_slots(summaries: Array) -> void:
 		var summary: Dictionary = summaries[slot_index] if slot_index < summaries.size() else {}
 		var is_occupied := bool(summary.get("occupied", false))
 		var slot_number := slot_index + 1
-		var save_label := get_node("Frame/Margin/Tabs/セーブ/SaveSlot%dRow/SaveSlot%dLabel" % [slot_number, slot_number]) as Label
-		var load_label := get_node("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dLabel" % [slot_number, slot_number]) as Label
-		var load_button := get_node("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dButton" % [slot_number, slot_number]) as Button
+		var save_label := get_node_or_null("Frame/Margin/Tabs/セーブ/SaveSlot%dRow/SaveSlot%dLabel" % [slot_number, slot_number]) as Label
+		var load_label := get_node_or_null("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dLabel" % [slot_number, slot_number]) as Label
+		var load_button := get_node_or_null("Frame/Margin/Tabs/ロード/LoadSlot%dRow/LoadSlot%dButton" % [slot_number, slot_number]) as Button
 		if not is_occupied:
-			save_label.text = "スロット%d: 空き" % slot_number
-			load_label.text = save_label.text
-			load_button.disabled = true
+			var empty_slot_text := "スロット%d: 空き" % slot_number
+			if save_label != null:
+				save_label.text = empty_slot_text
+			if load_label != null:
+				load_label.text = empty_slot_text
+			if load_button != null:
+				load_button.disabled = true
 			continue
 
 		var slot_description := "スロット%d\n%s\n%s" % [
@@ -108,27 +114,37 @@ func update_save_slots(summaries: Array) -> void:
 			str(summary.get("saved_at", "")),
 			str(summary.get("preview", ""))
 		]
-		save_label.text = slot_description
-		load_label.text = slot_description
-		load_button.disabled = false
+		if save_label != null:
+			save_label.text = slot_description
+		if load_label != null:
+			load_label.text = slot_description
+		if load_button != null:
+			load_button.disabled = false
 
 
 func set_save_status(message: String) -> void:
-	$Frame/Margin/Tabs/セーブ/SaveStatusLabel.text = message
+	var status_label := get_node_or_null("Frame/Margin/Tabs/セーブ/SaveStatusLabel") as Label
+	if status_label != null:
+		status_label.text = message
 
 
 func set_load_status(message: String) -> void:
-	$Frame/Margin/Tabs/ロード/LoadStatusLabel.text = message
+	var status_label := get_node_or_null("Frame/Margin/Tabs/ロード/LoadStatusLabel") as Label
+	if status_label != null:
+		status_label.text = message
 
 
-func open_from_title(tab_name: String) -> void:
+func open_from_title(tab_name: String) -> bool:
 	# タイトル画面から開く場合は、ゲーム中専用のタブを隠します。
 	_hide_tab_by_name("セーブ")
 	_hide_tab_by_name("ゲーム終了")
 
 	var requested_tab_index := _find_tab_index(tab_name)
-	if requested_tab_index >= 0:
-		tab_container.current_tab = requested_tab_index
+	if requested_tab_index < 0:
+		return false
+
+	tab_container.current_tab = requested_tab_index
+	return true
 
 
 func show_popup() -> void:

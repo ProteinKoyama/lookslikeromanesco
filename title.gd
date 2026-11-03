@@ -67,7 +67,8 @@ func _on_setting_button_pressed() -> void:
 
 func _open_options_tab(tab_name: String) -> void:
 	options_popup.update_save_slots(SaveManager.get_slot_summaries())
-	options_popup.open_from_title(tab_name)
+	if not options_popup.open_from_title(tab_name):
+		return
 	options_popup.show_popup()
 
 

@@ -116,6 +116,7 @@ theme = SubResource("Theme_Menu")
 text = "はじめる"
 
 [node name="LoadButton" type="Button" parent="MenuButtons" unique_id=1959076958]
+visible = false
 layout_mode = 2
 theme = SubResource("Theme_7g1a8")
 text = "ロード"
@@ -127,6 +128,7 @@ theme = SubResource("Theme_Menu")
 text = "設定"
 
 [node name="QuitButton" type="Button" parent="MenuButtons" unique_id=146400897]
+visible = false
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme = SubResource("Theme_Menu")

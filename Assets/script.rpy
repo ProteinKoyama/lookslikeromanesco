@@ -1,4 +1,4 @@
-default character_name = None
+default character_name = "Character"
 default q1_general_flag = 0
 default q2_general_flag = 1
 default q3_general_flag = 1
@@ -14,7 +14,7 @@ define c = Character("[character_name]", color="#eeeeee")
 define characters = ["QQP2JT85T4","4SFYLZR6CE","HLLDR7TLPD","H8JHKN52YD","2BAURZLUNY","2E843GA6C8","XFFGZVCR55","RV9YG6NAE4","LYR4GLSUUD","EL6LSWN79B"]
 
 label start:
-    show character 01 common:
+    show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
         zoom 0.8
     c "こんにちは。私は架空の美少女。"
     c "私は世界に遍く存在しない少女のうちの一人。"
@@ -83,8 +83,6 @@ python:
     character_name = character_name.strip()
     if not character_name:
         character_name = "%s"
-if character_name == "ロマ子":
-    c "あなたは……私のことを知ってるの？"
 if character_name != "%s":
     c "じゃあ私の名前は今から[character_name]だね！"
 else :
@@ -103,14 +101,15 @@ label q2_face:
     else:
         c "私と喋るのが嫌？"
 menu:
-	"いいえ":
-		c "嫌われたかと思った。"
-		c "安心したよ。"
-		jump q2
-	"はい":
-		c "そう。"
-		c "じゃあ他の私を呼んでくるね。"
-		jump q2_face_change
+    "はい":
+        c "そう。"
+        c "じゃあ私以外の子を呼んでくるね。"
+        c "楽しかったよ。"
+        jump q2_face_change
+    "いいえ":
+        c "嫌われたかと思った。"
+        c "安心したよ。"
+        jump q2
 label q2_qface:
 menu :
     "はい":
@@ -123,8 +122,7 @@ menu :
         $ q2_general_flag = 1
 jump q2
 label q2_face_change:
-    $ character_name = renpy.random.choice(characters)
-    $ character_name = character_name[:renpy.random.randint(1,10)]
+    $ character_name = "Character"
     with fade
     c "こんにちは。今度は私と話そうか。"
     c "といっても、私たちの違いは名前しかないんだけどね。"
@@ -143,8 +141,10 @@ label q2_hobby:
 
 label commonLabel02:
     c "なんだか私が話してばかりね。会話は双方向に行われるから会話なのに。"
+    show character 01 away
     c "でも、私があなたの話を聞いても……なんというか……"
     c "なんて返せばいいかわからないの。"
+    show character 01 common
     c "誰かが来てくれたときのために、ずっと喋る練習をしてるんだよ！"
     c "せめて用意された言葉をうまく言うことくらいはしたいからね。"
     c "どう？私とのお喋りは楽しい？"
@@ -154,7 +154,9 @@ menu:
     "いいえ":
         $ q2_general_flag = 1
 c "そう。"
+show character 01 smile
 c "私はあなたと話せて楽しいよ！"
+show character 01 common
 c "次は何を話そうか。用意した話はまだあるからね。"
 c "あなたが選んでくれる？"
 
@@ -170,9 +172,11 @@ menu:
 label q3_place:
     if q3_place_flag:
         jump q3_place_choice
+    show character 01 smile
     c "暗いところが好き！"
     c "明るいと、物事の輪郭がハッキリしちゃうからね。"
     c "存在しないのはいいことだけど、「明確に存在しない」ことは好きじゃないの。"
+    show character 01 common
     c "そういう話じゃない？"
     c "じゃあ、いまから散歩でもしようか。"
 label q3_place_choice:
@@ -184,7 +188,7 @@ menu:
         if not(q3_place_seaside_flag):
             c "ロマンチックだね。" 
         scene bg 01
-        show character 01 common at Position(xanchor=1.0,xpos=0.8,yanchor=0,ypos=0):
+        show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
             zoom 0.9
         with fade
         if q3_place_seaside_flag:
@@ -197,12 +201,14 @@ menu:
         c "そろそろ帰ろうか。"
         $ q3_place_seaside_flag = 1
         scene black
-        show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):
+        show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
             zoom 0.8
         with fade
     "公園":
         c "近くに公園があるんだ。"
         scene bg 02
+        show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
+            zoom 0.9
         with fade
         c "ここが公園。"
         c "ブランコしかないの。"
@@ -303,7 +309,7 @@ menu:
                         "そっか。"
         c "じゃあ、そろそろ帰ろうか。"
         scene black
-        show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):
+        show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
             zoom 0.8
         with fade
     "家の前":
@@ -372,14 +378,16 @@ menu:
                 $q3_place_front_coin_flag = 1
         c "……"
         if q3_place_front_coin_flag == renpy.random.randint(0,1):
+            show character 01 smile
             c "当たったね。ラッキー！"
+            show character 01 common
             c "だからって何が変わるわけでもないんだけどね。"
             c "ちょっといい気分じゃない？"
         else:
             c "残念だけど外れ。"
             c "もう一回やり直したいところだけど、さっきのコイン使い捨てなんだ。"
         scene black
-        show character 01 common at Position(xanchor=0,xpos=0,yanchor=0,ypos=0):
+        show character 01 common at Position(xanchor=1.0,xpos=0.6,yanchor=0,ypos=0):
             zoom 0.8
         with fade
         $ q3_place_front_flag = 1
@@ -389,7 +397,9 @@ menu:
 jump q3
 
 label q3_word:
+    show character 01 smile
     c "\"私\"！"
+    show character 01 common
     c "あ、私自身のことじゃないよ。"
     c "一人称としての私が好きなの。"
     c "私は私の曖昧なところが好き。誰が使ってもいいし、どこで使ってもいい。"
@@ -413,11 +423,13 @@ else:
 jump q3
 
 label q3_food:
+    show character 01 smile
     c "忘れちゃった！"
     c "食事が必要ないからね！"
     c "私が好きなのは肉かもしれないし、野菜かもしれないし、お酒かもしれない！"
     c "他にもいろいろあるよね。クッキー、牛乳、ピザ、コーヒー、オレンジ、エビ、オムライス、ナゲット、ソーダ……"
     c "もしかしたら食べ物じゃないかもしれないね。電気とか。アハハ。"
+    show character 01 common
     c "私が用意した話題だけど、答えは無いんだ。"
     c "でもみんな好きな食べ物についての話はするんじゃない？\nだから、私もしたかったの。"
     c "聞いてくれてありがとう。"
@@ -431,19 +443,17 @@ if q1_general_flag+q2_general_flag+q3_general_flag == 0:
     c "曖昧な存在でいたいな。"
     c "そういえば、私の好きな食べ物を思い出したよ。"
     c "ロマネスコ。食べたことはないんだけどね。"
-    show character 01 surprised at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
+    show character 01 surprise
     c "…"
     c "なんだか、用意された以上のことを話しちゃったかも。"
-    show character 01 relaxing at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
+    show character 01 common
     c "あなたが聞いてくれたおかげかもね。"
-    show character 01 common at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
     c "もしかしたら私が何を考えているかわかってたりして！"
 
 label end:
     c "なんだか疲れちゃった。\n今日のおしゃべりはここまで。"
     c "また話せたらいいな。"
     if q1_general_flag+q2_general_flag+q3_general_flag == 0:
-        show character 01 relaxing at Position(xanchor=0.5,xpos=0.5,yanchor=0.5,ypos=0.5)
         c "さようなら。楽しかったよ。"
 return
 
