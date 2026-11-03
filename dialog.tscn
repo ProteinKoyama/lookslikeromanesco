@@ -87,10 +87,12 @@ text = "閉じる"
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
 
 [node name="BacklogText" type="RichTextLabel" parent="BacklogPanel/BacklogMargin/BacklogLayout/BacklogScroll" unique_id=671474553]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 focus_mode = 2
 fit_content = true
 scroll_active = false

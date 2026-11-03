@@ -83,6 +83,8 @@ python:
     character_name = character_name.strip()
     if not character_name:
         character_name = "%s"
+if character_name == "ロマ子":
+    c "私のこと知ってた？"
 if character_name != "%s":
     c "じゃあ私の名前は今から[character_name]だね！"
 else :

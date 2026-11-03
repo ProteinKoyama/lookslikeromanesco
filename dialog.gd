@@ -62,26 +62,29 @@ func _input(event: InputEvent) -> void:
 	if not visible or (options_menu != null and options_menu.visible):
 		return
 	if event is InputEventMouseButton and event.pressed:
-		if backlog_panel.visible and event.button_index == MOUSE_BUTTON_LEFT:
-			var mouse_position := get_global_mouse_position()
-			var clicked_close_button := backlog_close_button.get_global_rect().has_point(mouse_position)
-			var clicked_outside_panel := not backlog_panel.get_global_rect().has_point(mouse_position)
-			if clicked_close_button or clicked_outside_panel:
+		var mouse_position := get_global_mouse_position()
+		if backlog_panel.visible:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				var clicked_close_button := backlog_close_button.get_global_rect().has_point(mouse_position)
+				var clicked_outside_panel := not backlog_panel.get_global_rect().has_point(mouse_position)
+				if clicked_close_button or clicked_outside_panel:
+					_close_backlog()
+					get_viewport().set_input_as_handled()
+					return
+
+			if (
+				event.button_index == MOUSE_BUTTON_WHEEL_DOWN
+				and not backlog_panel.get_global_rect().has_point(mouse_position)
+			):
 				_close_backlog()
 				get_viewport().set_input_as_handled()
-				return
+			return
 
+		# 開く操作だけ先取りし、表示中のホイール入力は ScrollContainer に渡します。
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			backlog_input_blocker.show()
 			backlog_panel.show()
 			call_deferred("_scroll_backlog_to_latest")
-			get_viewport().set_input_as_handled()
-		elif (
-			event.button_index == MOUSE_BUTTON_WHEEL_DOWN
-			and backlog_panel.visible
-			and not backlog_panel.get_global_rect().has_point(get_global_mouse_position())
-		):
-			_close_backlog()
 			get_viewport().set_input_as_handled()
 
 
