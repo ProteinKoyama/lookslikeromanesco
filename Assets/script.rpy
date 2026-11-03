@@ -53,7 +53,6 @@ menu:
  
 label q2_name:
     if q2_face_change_flag : 
-        $ character_name = renpy.random.choice(characters)
         $ q2_face_change_flag=0
     elif not(q2_name_flag):
         $ character_name = "%s"
@@ -124,7 +123,8 @@ menu :
         $ q2_general_flag = 1
 jump q2
 label q2_face_change:
-    $ character_name = "Character"
+    $ character_name = renpy.random.choice(characters)
+    $ character_name = character_name[:renpy.random.randint(1,10)]
     with fade
     c "こんにちは。今度は私と話そうか。"
     c "といっても、私たちの違いは名前しかないんだけどね。"
